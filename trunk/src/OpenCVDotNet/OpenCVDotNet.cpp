@@ -1,3 +1,8 @@
+/**
+ * (C) 2007 Elad Ben-Israel
+ * This code is licenced under the GPL.
+ */
+
 #include "stdafx.h"
 
 #include "CVUtils.h"
