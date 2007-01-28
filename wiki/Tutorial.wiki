@@ -12,7 +12,7 @@ I am using [http://msdn.microsoft.com/vstudio/express/visualcsharp/ Visual C# Ex
  * Create a new Windows Application project (File -> New Project, Windows Application).
  * Add references to the compiled DLL of OpenCVDotNet (TBD -> how to build) (Project -> Add Reference, Browse, find DLL).
 
-== {{{CVImage.ToBitmap()}}} ==
+== CVImage.ToBitmap() ==
 
 !OpenCVDotNet's {{{CVImage}}} object has a wondrous method called {{{ToBitmap()}}}. This method turns an !OpenCV image into a .NET {{{Bitmap}}} object, which can be used whenever a Bitmap object is accepted.
 
@@ -21,7 +21,7 @@ A common use of this method is to place a {{{PictureBox}}} on your form, and ass
  * Add a {{{PictureBox}}} component to the form using the Forms Designer (double click on the {{{PictureBox}}} item in the Toolbox.
  * Dock the picture box to your form (set the Dock property of the picture box to "Full").
 
-== {{{CVCapture}}} ==
+== CVCapture ==
 
 {{{CVCapture}}} can be used to capture images from a video - it can either be constructed to capture images from a Web Cam, or from an AVI file.
 
@@ -73,3 +73,30 @@ namespace HelloOpenCVDotNet
     }
 }
 }}}
+
+== Opening the Video File ==
+
+Type in the following code under {{{Form1_Load}}} handler (under <path to AVI file>, put a path to the AVI file that you wish to display).
+
+{{{
+private void Form1_Load(object sender, EventArgs e)
+{
+    capture = new CVCapture("<path to AVI file>");
+}
+}}}
+
+== QueryFrame ==
+
+Use the {{{CVCapture.QueryFrame()}}} method to receive the next frame every tick, convert it to a {{{Bitmap}}} and assign it as the Picture Box's image.
+
+{{{
+private void timer1_Tick(object sender, EventArgs e)
+{
+    using (CVImage nextFrame = capture.QueryFrame())
+    {
+        pictureBox1.Image = nextFrame.ToBitmap();
+    }            
+}
+}}}
+
+Note that we use the [http://msdn2.microsoft.com/en-us/library/yh598w02.aspx {{{using}}}] statement here, to make sure the {{{CVImage}}} object is disposed at the end of the method. Without {{{using}}}, we would have to explicitly call {{{nextFrame.Release()}}} at the end of the method.
