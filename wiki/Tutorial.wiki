@@ -132,5 +132,5 @@ using (CVImage nextFrame = capture.QueryFrame())
 Notes:
  * After the {{{QueryFrame}}}, we create a new {{{CVImage}}} object named {{{emptyImage}}} that is in the same size of the original image, but with only one channel.
  * Then, we call {{{Zero()}}} to initialize the image to 0.
- * Then, we use {{{Split}}} to split the image to its 3 channels and {{{Merge}} to merge the channels back, taking only the 3rd component (red) and using {{{emptyImage}}} for the blue and green.
+ * Then, we use {{{Split}}} to split the image to its 3 channels and {{{Merge}}} to merge the channels back, taking only the 3rd component (red) and using {{{emptyImage}}} for the blue and green.
  * Note that we must release the images received from {{{Split()}}}.
