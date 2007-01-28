@@ -2,7 +2,7 @@
 
 = Hello, OpenCVDotNet =
 
-We'll create a simple C# project that uses !OpenCVDotNet to perform a simple image-wise operation on a video (AVI) file (flip color channels and recolor the image).
+We'll create a simple C# project that uses !OpenCVDotNet to perform a simple image-wise operation on a video (AVI) file (show only the red color channel instead of all three color channels).
 
 I am using [http://msdn.microsoft.com/vstudio/express/visualcsharp/ Visual C# Express].
 
@@ -99,4 +99,38 @@ private void timer1_Tick(object sender, EventArgs e)
 }
 }}}
 
-Note that we use the [http://msdn2.microsoft.com/en-us/library/yh598w02.aspx {{{using}}}] statement here, to make sure the {{{CVImage}}} object is disposed at the end of the method. Without {{{using}}}, we would have to explicitly call {{{nextFrame.Release()}}} at the end of the method.
+Note that we use the [http://msdn2.microsoft.com/en-us/library/yh598w02.aspx using] statement here, to make sure the {{{CVImage}}} object is disposed at the end of the method. Without 'using', we would have to explicitly call {{{nextFrame.Release()}}} at the end of the method.
+
+*Congrats!* You can run your application and check it out. It should show the video you referenced in the picture box, and it should be playing!
+
+== Split and Merge ==
+
+Now, we will do some changes to the image before it's displayed. We'll flip the color channels of the image, so that we will use the red channel instead of the green channel, the blue channel instead of the red and the green channel instead of the blue.
+
+To do that, we will use the {{{Split}}} and {{{Merge}}} methods of {{{CVImage}}}. The {{{Split}}} method returns an array of 3 {{{CVImage}}} objects, corresponding to the blue, green and red channels (in that order). The Merge takes an array of three {{{CVImage}}} objects and merges them into the three channels (BGR order as well).
+
+{{{
+using (CVImage nextFrame = capture.QueryFrame())
+{
+    using (CVImage emptyImage = new CVImage(nextFrame.Width, nextFrame.Height, CVDepth.Depth8U, 1))
+    {
+        // set entire image to "0".
+        emptyImage.Zero();
+
+        // split the image into three channels
+        CVImage[] bgrChannels = nextFrame.Split();
+        nextFrame.Merge(new CVImage[] { emptyImage, emptyImage, bgrChannels[2] });
+        pictureBox1.Image = nextFrame.ToBitmap();
+
+        // release channel images.
+        foreach (CVImage ch in bgrChannels)
+            ch.Release();
+    }
+}            
+}}}
+
+Notes:
+ * After the {{{QueryFrame}}}, we create a new {{{CVImage}}} object named {{{emptyImage}}} that is in the same size of the original image, but with only one channel.
+ * Then, we call {{{Zero()}}} to initialize the image to 0.
+ * Then, we use {{{Split}}} to split the image to its 3 channels and {{{Merge}} to merge the channels back, taking only the 3rd component (red) and using {{{emptyImage}}} for the blue and green.
+ * Note that we must release the images received from {{{Split()}}}.
