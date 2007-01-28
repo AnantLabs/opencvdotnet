@@ -1,7 +1,75 @@
 #summary This is a basic tutorial on how to use OpenCVDotNet
 
+= Hello, OpenCVDotNet =
 
+We'll create a simple C# project that uses !OpenCVDotNet to perform a simple image-wise operation on a video (AVI) file (flip color channels and recolor the image).
 
-_still under construction_
+I am using [http://msdn.microsoft.com/vstudio/express/visualcsharp/ Visual C# Express].
 
-Sorry...
+== Creating the Project ==
+
+ * Start Visual C# Express.
+ * Create a new Windows Application project (File -> New Project, Windows Application).
+ * Add references to the compiled DLL of OpenCVDotNet (TBD -> how to build) (Project -> Add Reference, Browse, find DLL).
+
+== {{{CVImage.ToBitmap()}}} ==
+
+!OpenCVDotNet's {{{CVImage}}} object has a wondrous method called {{{ToBitmap()}}}. This method turns an !OpenCV image into a .NET {{{Bitmap}}} object, which can be used whenever a Bitmap object is accepted.
+
+A common use of this method is to place a {{{PictureBox}}} on your form, and assign the resulting {{{Bitmap}}} into the {{{Image}}} of the {{{PictureBox}}}. This way, a CV image can be displayed on a Windows Form.
+
+ * Add a {{{PictureBox}}} component to the form using the Forms Designer (double click on the {{{PictureBox}}} item in the Toolbox.
+ * Dock the picture box to your form (set the Dock property of the picture box to "Full").
+
+== {{{CVCapture}}} ==
+
+{{{CVCapture}}} can be used to capture images from a video - it can either be constructed to capture images from a Web Cam, or from an AVI file.
+
+We will use a {{{CVCapture}}} and a .NET {{{Timer}}} object to play a video stream.
+
+The {{{Timer}}} object will tick every 40 milliseconds (25 times per second), and in every tick, we will capture the next frame of the video, analyze it and display it into the picture box.
+
+ * Add a Timer object to the form using the Forms Designer (double click on the Timer item from the Toolbox).
+ * Configure the new timer object to tick every 40 milliseconds (set the {{{Interval}}} property to 40).
+ * Enable the timer (set the {{{Enabled}}} property of the timer to {{{True}}}).
+ * Add an event handler for the Timer.Tick event (double click on the Tick event of the Timer's event list).
+ * Add a handler for the Load event of your main form (double click on the Load event of the form event list).
+ * Press F7 to switch to code view of the form.
+ * At the beginning of the file, add a {{{using}}} statement to include the {{{OpenCVDotNet}}} namespace.
+ * Add a private member variable to contain the {{{CVCapture}}} object.
+
+Your file should look like this:
+
+{{{
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using OpenCVDotNet;
+
+namespace HelloOpenCVDotNet
+{
+    public partial class Form1 : Form
+    {
+        private CVCapture capture;
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+}}}
