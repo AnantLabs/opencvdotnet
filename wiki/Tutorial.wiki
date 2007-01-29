@@ -2,7 +2,7 @@
 
 = Hello, OpenCVDotNet =
 
-We'll create a simple C# project that uses !OpenCVDotNet to perform a simple image-wise operation on a video (AVI) file (show only the red color channel instead of all three color channels).
+We'll create a simple C# project that uses OpenCVDotNet to perform a simple image-wise operation on a video (AVI) file (show only the red color channel instead of all three color channels).
 
 I am using [http://msdn.microsoft.com/vstudio/express/visualcsharp/ Visual C# Express].
 
@@ -14,7 +14,7 @@ I am using [http://msdn.microsoft.com/vstudio/express/visualcsharp/ Visual C# Ex
 
 == CVImage.ToBitmap() ==
 
-!OpenCVDotNet's {{{CVImage}}} object has a wondrous method called {{{ToBitmap()}}}. This method turns an !OpenCV image into a .NET {{{Bitmap}}} object, which can be used whenever a Bitmap object is accepted.
+OpenCVDotNet's {{{CVImage}}} object has a wondrous method called {{{ToBitmap()}}}. This method turns an OpenCV image into a .NET {{{Bitmap}}} object, which can be used whenever a Bitmap object is accepted.
 
 A common use of this method is to place a {{{PictureBox}}} on your form, and assign the resulting {{{Bitmap}}} into the {{{Image}}} of the {{{PictureBox}}}. This way, a CV image can be displayed on a Windows Form.
 
