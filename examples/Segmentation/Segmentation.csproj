@@ -4,11 +4,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1E97114A-BAAF-478B-83FB-6B1A0F1DA866}</ProjectGuid>
+    <ProjectGuid>{C2617B9B-3BD7-4B22-91C2-6DDA0DAFF323}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OpenCVDotNet.Examples</RootNamespace>
-    <AssemblyName>BackgroundSubtraction</AssemblyName>
+    <AssemblyName>Segmentation</AssemblyName>
+    <StartupObject>OpenCVDotNet.Examples.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,16 +41,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MovingAverage.cs" />
-    <Compile Include="Options.cs">
+    <Compile Include="ColorSegmentation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Options.Designer.cs">
-      <DependentUpon>Options.cs</DependentUpon>
+    <Compile Include="ColorSegmentation.Designer.cs">
+      <DependentUpon>ColorSegmentation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Path.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Path.Designer.cs">
+      <DependentUpon>Path.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <EmbeddedResource Include="Options.resx">
-      <DependentUpon>Options.cs</DependentUpon>
+    <EmbeddedResource Include="ColorSegmentation.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ColorSegmentation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Path.resx">
+      <DependentUpon>Path.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -58,9 +78,6 @@
       <Project>{D7A04B8D-BC53-4210-8424-8EE5C79EF3C2}</Project>
       <Name>OpenCVDotNet.UI</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

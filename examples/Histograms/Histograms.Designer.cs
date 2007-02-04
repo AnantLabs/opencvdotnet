@@ -1,4 +1,4 @@
-namespace Histograms
+namespace OpenCVDotNet.Examples
 {
     partial class Histograms
     {

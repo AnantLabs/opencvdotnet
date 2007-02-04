@@ -14,7 +14,7 @@ namespace OpenCVDotNet.Examples
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Histograms());
+            Application.Run(new Path());
         }
     }
 }

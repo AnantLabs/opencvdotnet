@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace MeanShift
+namespace OpenCVDotNet.Examples
 {
     static class Program
     {

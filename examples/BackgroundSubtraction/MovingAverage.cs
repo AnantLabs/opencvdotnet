@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ComputerVision
+namespace OpenCVDotNet.Examples
 {
     /// <summary>
     /// This class implements moving average.
