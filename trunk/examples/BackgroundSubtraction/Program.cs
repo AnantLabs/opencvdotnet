@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace ComputerVision
+namespace OpenCVDotNet.Examples
 {
     static class BackgroundSubtraction
     {

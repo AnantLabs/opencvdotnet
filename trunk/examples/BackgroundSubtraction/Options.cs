@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Threading;
 using OpenCVDotNet;
 
-namespace ComputerVision
+namespace OpenCVDotNet.Examples
 {
     public partial class Options : Form
     {

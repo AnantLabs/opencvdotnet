@@ -1,4 +1,4 @@
-namespace ComputerVision
+namespace OpenCVDotNet.Examples
 {
     partial class Options
     {

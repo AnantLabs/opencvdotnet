@@ -9,18 +9,19 @@ using OpenCVDotNet;
 
 namespace OpenCVDotNet.Examples
 {
-    public partial class MeanShift : Form
+    public partial class Path : Form
     {
         private CVImage image = null;
         private CVCapture cap = new CVCapture();
         private CVHistogram initialHistogram = null;
         private int updateHistoCounter = 0;
+        private CVImage segmentationImage = null;
+        List<Point> segPoints = null;
 
-        public MeanShift()
+        public Path()
         {
             InitializeComponent();
         }
-
 
         /// <summary>
         /// Calculate the histogram for the region of interest and saves it under 
@@ -44,7 +45,15 @@ namespace OpenCVDotNet.Examples
             initHisto.ShowHistogram(image);
             image.ResetROI();
 
+            ResetSegmentation();
+
             RefreshImages();
+        }
+
+        private void ResetSegmentation()
+        {
+            segmentationImage = image.Clone();
+            segPoints = new List<Point>();
         }
 
         private void Track()
@@ -62,6 +71,8 @@ namespace OpenCVDotNet.Examples
 
                 // update region of interest according to mean shift result.
                 originalImage.SelectionRect = conn.Rect;
+
+                DrawSegmentation(conn.Rect);
             }
 
             // rotate update counter only if rate != 0.
@@ -80,6 +91,31 @@ namespace OpenCVDotNet.Examples
             RefreshImages();
         }
 
+        private int pointCounter = 0;
+
+        private void DrawSegmentation(Rectangle rect)
+        {
+            pointCounter = (pointCounter + 1) % 15;
+
+            if (pointCounter != 0)
+            {
+                return;
+            }
+
+            Point pt = new Point(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2);
+
+            if (segPoints.Count > 0)
+            {
+                segmentationImage.DrawLine(segPoints[segPoints.Count - 1], pt, Color.White);
+            }
+
+            segPoints.Add(pt);
+            
+
+            Rectangle rc = new Rectangle(pt, new Size(2, 2));
+            segmentationImage.DrawRectangle(rc, Color.Yellow);
+        }
+
         /// <summary>
         /// Refresh all images.
         /// </summary>
@@ -90,6 +126,8 @@ namespace OpenCVDotNet.Examples
             roiHisto.ShowHistogram(image);
             image.ResetROI();
             originalImage.Image = image.ToBitmap();
+
+            segPicture.Image = segmentationImage.ToBitmap();
 
             // update rectangle values into status bar.
             statusBar.Text = originalImage.SelectionRect.ToString() + " Update Rate: " + 
@@ -243,5 +281,5 @@ namespace OpenCVDotNet.Examples
         }
 
         #endregion
-    }
+   }
 }
