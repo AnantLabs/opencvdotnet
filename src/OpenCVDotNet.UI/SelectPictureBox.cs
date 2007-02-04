@@ -11,6 +11,7 @@ namespace OpenCVDotNet.UI
     public partial class SelectPictureBox : PictureBox
     {
         private SelectBox selectBox;
+        private bool showSelectBox = true;
 
         public SelectPictureBox()
         {
@@ -68,7 +69,22 @@ namespace OpenCVDotNet.UI
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
-            this.selectBox.OnPaint(pe);
+
+            if (showSelectBox)
+                this.selectBox.OnPaint(pe);
+        }
+
+        /// <summary>
+        /// Determines if the selection box is shown.
+        /// </summary>
+        public bool ShowSelection
+        {
+            get { return showSelectBox; }
+            set
+            {
+                showSelectBox = value;
+                Invalidate();
+            }
         }
     }
 

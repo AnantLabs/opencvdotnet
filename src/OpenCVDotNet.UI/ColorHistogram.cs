@@ -79,9 +79,12 @@ namespace OpenCVDotNet.UI
                 byte[] markerColor = new byte[3];
                 markerColor[channelIdx] = level;
 
-                outputImage.DrawRectangle(bin * binWidth, imageHeight, bin * binWidth + binWidth - 1, imageHeight - binHeight, color);
-                outputImage.DrawRectangle(bin * binWidth, imageHeight - binHeight, bin * binWidth + binWidth - 1, imageHeight - binHeight, markerColor);
-                outputImage.DrawRectangle(bin * binWidth, imageHeight, bin * binWidth, imageHeight - binHeight, markerColor);
+                Color colColor = Color.FromArgb(color[2], color[1], color[0]);
+                Color colMarker = Color.FromArgb(markerColor[2], markerColor[1], markerColor[0]);
+
+                outputImage.DrawRectangle(new Rectangle(bin * binWidth, imageHeight, binWidth - 1, -binHeight), colColor);
+                outputImage.DrawRectangle(new Rectangle(bin * binWidth, imageHeight - binHeight, binWidth - 1, 1), colMarker);
+                outputImage.DrawRectangle(new Rectangle(bin * binWidth, imageHeight, 1, -binHeight), colMarker);
             }
 
             window.Image = outputImage.ToBitmap();

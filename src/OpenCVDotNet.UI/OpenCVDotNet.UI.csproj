@@ -45,12 +45,14 @@
     <Compile Include="ColorHistogram.Designer.cs">
       <DependentUpon>ColorHistogram.cs</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SelectPictureBox.Designer.cs">
       <DependentUpon>SelectPictureBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VideoPlayer.cs">
+      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +60,9 @@
       <DependentUpon>ColorHistogram.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

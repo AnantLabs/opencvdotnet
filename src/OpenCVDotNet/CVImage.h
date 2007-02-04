@@ -88,17 +88,7 @@ namespace OpenCVDotNet
 		CVImage(CVImage^ clone)
 		{
 			Create(clone->Width, clone->Height, clone->Depth, clone->Channels);
-			CopyFrom(clone, CV_CVTIMG_FLIP);
-		}
-
-		void CopyFrom(CVImage^ source)
-		{
-			CopyFrom(source, 0);
-		}
-
-		void CopyFrom(CVImage^ source, int flags)
-		{
-			cvConvertImage(source->image, this->image, flags);
+			cvConvertImage(clone->Internal, this->image, clone->Internal->origin == 1 ? CV_CVTIMG_FLIP : 0);
 		}
 
 		CVImage(int width, int height, CVDepth depth, int channels)
@@ -116,6 +106,12 @@ namespace OpenCVDotNet
 			LoadImage(filename, isColor);
 		}
 
+		CVImage(array<CVImage^>^ bgrChannels)
+		{
+			Create(bgrChannels[0]->Width, bgrChannels[0]->Height, bgrChannels[0]->Depth, 3);
+			this->Merge(bgrChannels);
+		}
+
 		virtual ~CVImage()
 		{
 			Release();
@@ -128,12 +124,6 @@ namespace OpenCVDotNet
 			char fn[1024 + 1];
 			CVUtils::StringToCharPointer(filename, fn, 1024);
 			image = cvLoadImage(fn, isColor ? 1 : 0);
-			created = true;
-		}
-
-		void Create(int width, int height, CVDepth depth, int channels)
-		{
-			image = cvCreateImage(cvSize(width, height), (int) depth,  channels);
 			created = true;
 		}
 
@@ -216,30 +206,47 @@ namespace OpenCVDotNet
 			if (image != NULL)
 				cvZero(image);
 		}
-		
-		void DrawRectangle(int left, int top, int right, int bottom, unsigned char r, unsigned char g, unsigned char b)
+
+		void DrawLine(System::Drawing::Point pt1, System::Drawing::Point pt2, System::Drawing::Color color)
 		{
-			DrawRectangle(left, top, right, bottom, r, g, b, 1, 8, 0);
+			DrawLine(pt1, pt2, color, 1);
 		}
 
-		void DrawRectangle(int left, int top, int right, int bottom, unsigned char r, unsigned char g, unsigned char b, int thickness)
+
+		void DrawLine(System::Drawing::Point pt1, System::Drawing::Point pt2, System::Drawing::Color color, int thickness)
 		{
-			DrawRectangle(left, top, right, bottom, r, g, b, thickness, 8, 0);
+			DrawLine(pt1, pt2, color, thickness, 8);
 		}
 
-		void DrawRectangle(int left, int top, int right, int bottom, unsigned char r, unsigned char g, unsigned char b, int thickness, int lineType)
+
+		void DrawLine(System::Drawing::Point pt1, System::Drawing::Point pt2, System::Drawing::Color color, int thickness, int lineType)
 		{
-			DrawRectangle(left, top, right, bottom, r, g, b, thickness, lineType, 0);
+			DrawLine(pt1, pt2, color, thickness, lineType, 0);
 		}
 
-		void DrawRectangle(int left, int top, int right, int bottom, unsigned char r, unsigned char g, unsigned char b, int thickness, int lineType, int shift)
+		void DrawLine(System::Drawing::Point pt1, System::Drawing::Point pt2, System::Drawing::Color color, int thickness, int lineType, int shift)
 		{
-			cvRectangle(image, cvPoint(left, top), cvPoint(right, bottom), CV_RGB(r,g,b), thickness, lineType, shift);
+			cvLine(this->Internal, cvPoint(pt1.X, pt1.Y), cvPoint(pt2.X, pt2.Y), CV_RGB(color.R, color.G, color.B), thickness, lineType, shift);
 		}
 
-		void DrawRectangle(int left, int top, int right, int bottom, array<unsigned char>^ colorRbg)
+		void DrawRectangle(System::Drawing::Rectangle rect, System::Drawing::Color color)
 		{
-			DrawRectangle(left, top, right, bottom, colorRbg[0], colorRbg[2], colorRbg[1], -1);
+			DrawRectangle(rect, color, 1);
+		}
+
+		void DrawRectangle(System::Drawing::Rectangle rect, System::Drawing::Color color, int thickness)
+		{
+			DrawRectangle(rect, color, thickness, 8, 0);
+		}
+
+		void DrawRectangle(System::Drawing::Rectangle rect, System::Drawing::Color color, int thickness, int lineType)
+		{
+			DrawRectangle(rect, color, thickness, lineType, 0);
+		}
+
+		void DrawRectangle(System::Drawing::Rectangle rect, System::Drawing::Color color, int thickness, int lineType, int shift)
+		{
+			cvRectangle(image, cvPoint(rect.Left, rect.Top), cvPoint(rect.Right, rect.Bottom), CV_RGB(color.R,color.G,color.B), thickness, lineType, shift);
 		}
 
 		void Split(CVImage^ ch0, CVImage^ ch1, CVImage^ ch2, CVImage^ ch3)
@@ -248,6 +255,7 @@ namespace OpenCVDotNet
 			IplImage* d1 = ch1 != nullptr ? ch1->image : NULL;
 			IplImage* d2 = ch2 != nullptr ? ch2->image : NULL;
 			IplImage* d3 = ch3 != nullptr ? ch3->image : NULL;
+
 			cvSplit(image, d0, d1, d2, d3);
 		}
 
@@ -284,6 +292,17 @@ namespace OpenCVDotNet
 		{
 			assert(rbgChannels->Length == 3);
 			Merge(rbgChannels[0], rbgChannels[1], rbgChannels[2]);
+		}
+
+		CVHistogram^ CalcHistogram(int binsSize)
+		{
+			array<Int32>^ binSizes = gcnew array<Int32>(3);
+			array<CVPair^>^ binRanges = gcnew array<CVPair^>(3);
+
+			binSizes[0] = binSizes[1] = binSizes[2] = binsSize;
+			binRanges[0] = binRanges[1] = binRanges[2] = gcnew CVPair(0, 255);
+
+			return CalcHistogram(binSizes, binRanges);
 		}
 
 		CVHistogram^ CalcHistogram(array<int>^ binSizes, array<CVPair^>^ binRanges)
@@ -460,6 +479,65 @@ namespace OpenCVDotNet
 			return gcnew CVConnectedComp(&comp);
 		}
 
+		CVImage^ CopyRegion(System::Drawing::Rectangle rect)
+		{
+			CVImage^ roi = gcnew CVImage(this);
+			roi->RegionOfInterest = rect;
+			return roi;
+		}
+
+		void DrawPixel(System::Drawing::Point pt)
+		{
+			DrawPixel(pt, Color::FromArgb(255,255,255));
+		}
+
+		void DrawPixel(System::Drawing::Point pt, System::Drawing::Color color)
+		{
+			DrawPixel(pt, color, 1);
+		}
+
+		void DrawPixel(System::Drawing::Point pt, System::Drawing::Color color, int thickness)
+		{
+			DrawRectangle(
+				System::Drawing::Rectangle(pt, Size(0, 0)), 
+				color, thickness);
+		}
+
+		CVConnectedComp^ CamShift(System::Drawing::Rectangle window)
+		{
+			return CamShift(window, 0, 0, 0.0);
+		}
+
+		CVConnectedComp^ CamShift(System::Drawing::Rectangle window, double eps)
+		{
+			return CamShift(window, CV_TERMCRIT_EPS, 0, eps);
+		}
+
+		CVConnectedComp^ CamShift(System::Drawing::Rectangle window, int maxIterations)
+		{
+			return CamShift(window, CV_TERMCRIT_ITER, maxIterations, 0.0);
+		}
+
+		CVConnectedComp^ CamShift(System::Drawing::Rectangle window, int termCriteria, int maxIterations, double eps)
+		{
+			CvConnectedComp cc;
+			cvCamShift(Internal, cvRect(window.X, window.Y, window.Width, window.Height), cvTermCriteria(termCriteria, maxIterations, eps), &cc);
+			return gcnew CVConnectedComp(&cc);
+		}
+
+		CVImage^ Clone()
+		{
+			CVImage^ n = gcnew CVImage(NULL);
+			n->image = cvCloneImage(this->Internal);
+			return n;
+		}
+
+	private:
+		void Create(int width, int height, CVDepth depth, int channels)
+		{
+			image = cvCreateImage(cvSize(width, height), (int) depth,  channels);
+			created = true;
+		}
 	};
 
 

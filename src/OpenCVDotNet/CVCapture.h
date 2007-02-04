@@ -84,10 +84,23 @@ namespace OpenCVDotNet
 			this->filename = filename;
 		}
 
+		property int FramesPerSecond
+		{
+			int get()
+			{
+				return (int) cvGetCaptureProperty(capture, CV_CAP_PROP_FPS);
+			}
+		}
 
 		void Restart()
 		{
 			Open(filename);
+		}
+
+		CVImage^ CreateCompatibleImage()
+		{
+			CVImage^ img = gcnew CVImage(this->Width, this->Height, CVDepth::Depth8U, 3);
+			return img;
 		}
 	};
 };
