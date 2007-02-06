@@ -10,8 +10,10 @@ namespace OpenCVDotNet.UI
 {
     public partial class SelectPictureBox : PictureBox
     {
+        private const int CROSS_SIZE = 5;
         private SelectBox selectBox;
         private bool showSelectBox = true;
+        private bool showCross = false;
 
         public SelectPictureBox()
         {
@@ -66,12 +68,31 @@ namespace OpenCVDotNet.UI
             selectBox.OnMouseMove(e);
         }
 
+
+
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
 
             if (showSelectBox)
                 this.selectBox.OnPaint(pe);
+
+            if (showCross)
+            {
+                Point midPoint = new Point(
+                    selectBox.Rect.Left + selectBox.Rect.Width / 2,
+                    selectBox.Rect.Top + selectBox.Rect.Height / 2);
+
+                pe.Graphics.DrawLine(
+                    Pens.Red,
+                    midPoint.X, midPoint.Y - CROSS_SIZE,
+                    midPoint.X, midPoint.Y + CROSS_SIZE);
+
+                pe.Graphics.DrawLine(
+                    Pens.Red,
+                    midPoint.X - CROSS_SIZE, midPoint.Y,
+                    midPoint.X + CROSS_SIZE, midPoint.Y);
+            }
         }
 
         /// <summary>
@@ -83,6 +104,19 @@ namespace OpenCVDotNet.UI
             set
             {
                 showSelectBox = value;
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// If 'true', a cross is shown in the middle of the selection box to indicate it's center.
+        /// </summary>
+        public bool ShowCross
+        {
+            get { return showCross; }
+            set 
+            { 
+                showCross = value;
                 Invalidate();
             }
         }

@@ -5,8 +5,16 @@
 
 #pragma once
 
+#include "CVException.h"
+
 namespace OpenCVDotNet
 {
+	static int ErrorHandler(int status, const char* func_name, const char* err_msg, const char* file_name, int line, void* userdata)
+	{
+		throw gcnew CVException(gcnew System::String(err_msg));
+		return 0;
+	}
+
 	public ref class CVUtils
 	{
 	public:
@@ -19,6 +27,11 @@ namespace OpenCVDotNet
 		static int Round(double val)
 		{
 			return cvRound(val);
+		}
+
+		static void ErrorsToExceptions()
+		{
+			cvRedirectError(ErrorHandler);
 		}
 	};
 };
