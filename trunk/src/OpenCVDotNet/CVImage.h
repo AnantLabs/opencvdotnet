@@ -63,6 +63,11 @@ namespace OpenCVDotNet
 			contour = in->contour;
 		}
 
+		CVConnectedComp(System::Drawing::Rectangle rect)
+		{
+			this->rect = rect;
+		}
+
 		property System::Drawing::Rectangle Rect
 		{
 			System::Drawing::Rectangle get()
@@ -426,7 +431,12 @@ namespace OpenCVDotNet
 		{
 			void set(System::Drawing::Rectangle rect)
 			{
-				cvSetImageROI(Internal, cvRect(rect.X, rect.Y, rect.Width, rect.Height));
+				System::Drawing::Rectangle irect(0, 0, Width, Height);
+				if (!irect.IntersectsWith(rect))
+					return;
+
+				irect.Intersect(rect);
+				cvSetImageROI(Internal, cvRect(irect.X, irect.Y, irect.Width, irect.Height));
 			}
 
 			System::Drawing::Rectangle get()
@@ -483,7 +493,16 @@ namespace OpenCVDotNet
 
 		CVConnectedComp^ MeanShift(System::Drawing::Rectangle window, int termCriteria, int maxIterations, double eps)
 		{
-			CvRect wnd = cvRect(window.X, window.Y, window.Width, window.Height);
+			System::Drawing::Rectangle realWindow(0, 0, Width, Height);
+			if (!realWindow.IntersectsWith(window))
+			{
+				CVConnectedComp^ cc = gcnew CVConnectedComp(window);
+				return cc;
+			}
+
+			realWindow.Intersect(window);
+
+			CvRect wnd = cvRect(realWindow.X, realWindow.Y, realWindow.Width, realWindow.Height);
 			CvTermCriteria tc = cvTermCriteria(termCriteria, maxIterations, eps);
 			
 			CvConnectedComp comp;
