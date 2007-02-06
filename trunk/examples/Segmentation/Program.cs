@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace OpenCVDotNet.Examples
 {
@@ -14,7 +15,20 @@ namespace OpenCVDotNet.Examples
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Path());
+            
+            ExampleSelection es = new ExampleSelection();
+
+            Assembly me = Assembly.GetCallingAssembly();
+            foreach (Type t in me.GetTypes())
+            {
+                if (t.IsSubclassOf(typeof(Form)) && t != typeof(ExampleSelection))
+                {
+                    Form f = (Form) me.CreateInstance(t.FullName);
+                    es.AddForm(f);
+                }
+            }
+
+            es.ShowDialog();
         }
     }
 }
