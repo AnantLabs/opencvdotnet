@@ -54,6 +54,7 @@ namespace OpenCVDotNet.Examples
 
         public void Run()
         {
+            f.WindowState = FormWindowState.Maximized;
             f.ShowDialog();
         }
     }

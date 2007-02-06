@@ -1,6 +1,6 @@
 namespace OpenCVDotNet.Examples
 {
-    partial class ColorSegmentation
+    partial class History
     {
         /// <summary>
         /// Required designer variable.
@@ -28,11 +28,12 @@ namespace OpenCVDotNet.Examples
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ColorSegmentation));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(History));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.video = new OpenCVDotNet.UI.SelectPictureBox();
             this.backProjection = new System.Windows.Forms.PictureBox();
+            this.video = new OpenCVDotNet.UI.SelectPictureBox();
             this.bs = new System.Windows.Forms.PictureBox();
+            this.growingFrame = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,14 +45,13 @@ namespace OpenCVDotNet.Examples
             this.playButton = new System.Windows.Forms.ToolStripButton();
             this.pauseButton = new System.Windows.Forms.ToolStripButton();
             this.videoPlayer = new OpenCVDotNet.UI.VideoPlayer();
-            this.growingFrame = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.video)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.backProjection)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.video)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.growingFrame)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.growingFrame)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -72,6 +72,16 @@ namespace OpenCVDotNet.Examples
             this.tableLayoutPanel1.Size = new System.Drawing.Size(766, 502);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
+            // backProjection
+            // 
+            this.backProjection.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.backProjection.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.backProjection.Location = new System.Drawing.Point(3, 3);
+            this.backProjection.Name = "backProjection";
+            this.backProjection.Size = new System.Drawing.Size(377, 245);
+            this.backProjection.TabIndex = 2;
+            this.backProjection.TabStop = false;
+            // 
             // video
             // 
             this.video.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -85,16 +95,6 @@ namespace OpenCVDotNet.Examples
             this.video.TabStop = false;
             this.video.SelectionChanged += new System.EventHandler(this.video_SelectionChanged);
             // 
-            // backProjection
-            // 
-            this.backProjection.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.backProjection.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.backProjection.Location = new System.Drawing.Point(3, 3);
-            this.backProjection.Name = "backProjection";
-            this.backProjection.Size = new System.Drawing.Size(377, 245);
-            this.backProjection.TabIndex = 2;
-            this.backProjection.TabStop = false;
-            // 
             // bs
             // 
             this.bs.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -104,6 +104,16 @@ namespace OpenCVDotNet.Examples
             this.bs.Size = new System.Drawing.Size(377, 245);
             this.bs.TabIndex = 3;
             this.bs.TabStop = false;
+            // 
+            // growingFrame
+            // 
+            this.growingFrame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.growingFrame.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.growingFrame.Location = new System.Drawing.Point(386, 254);
+            this.growingFrame.Name = "growingFrame";
+            this.growingFrame.Size = new System.Drawing.Size(377, 245);
+            this.growingFrame.TabIndex = 3;
+            this.growingFrame.TabStop = false;
             // 
             // menuStrip1
             // 
@@ -200,17 +210,7 @@ namespace OpenCVDotNet.Examples
             this.videoPlayer.Opening += new OpenCVDotNet.UI.OpeningEventHandler(this.videoPlayer_Opening);
             this.videoPlayer.Playing += new System.ComponentModel.CancelEventHandler(this.videoPlayer_Playing);
             // 
-            // growingFrame
-            // 
-            this.growingFrame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.growingFrame.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.growingFrame.Location = new System.Drawing.Point(386, 254);
-            this.growingFrame.Name = "growingFrame";
-            this.growingFrame.Size = new System.Drawing.Size(377, 245);
-            this.growingFrame.TabIndex = 3;
-            this.growingFrame.TabStop = false;
-            // 
-            // ColorSegmentation
+            // History
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -219,17 +219,17 @@ namespace OpenCVDotNet.Examples
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "ColorSegmentation";
-            this.Text = "ColorSegmentation";
+            this.Name = "History";
+            this.Text = "History";
             this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.video)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.backProjection)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.video)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.growingFrame)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.growingFrame)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
