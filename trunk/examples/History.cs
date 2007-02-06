@@ -47,44 +47,15 @@ namespace OpenCVDotNet.Examples
                 {
                     CVConnectedComp cc = bp.MeanShift(video.SelectionRect, 100);
                     video.SelectionRect = cc.Rect;
-
-                    Point midPoint = new Point(
-                        video.SelectionRect.Left + video.SelectionRect.Width / 2,
-                        video.SelectionRect.Top + video.SelectionRect.Height / 2);
-
-                    /*
-                    using (CVImage colorBp = new CVImage(bp.Width, bp.Height, bp.Depth, 3))
-                    {
-                        colorBp.Merge(new CVImage[] { bp, bp, bp });
-
-                        colorBp.DrawPixel(midPoint, Color.Red, 5);
-                        colorBp.DrawRectangle(video.SelectionRect, Color.Blue);
-
-                        backProjection.Image = colorBp.ToBitmap();
-                    }
-                    */
-
-                    backProjection.Image = bp.ToBitmap();
-
-                    using (CVImage rg = videoPlayer.Capture.CreateCompatibleImage())
-                    {
-                        rg.Zero();
-                        Rectangle rect = video.SelectionRect;
-                        //rect.Inflate(50, 50);
-
-                        for (int row = rect.Top; row < rect.Bottom; ++row)
-                        {
-                            for (int col = rect.Left; col < rect.Right; ++col)
-                            {
-                                Point pt = new Point(col, row);
-                                RegionGrowing(bp, pt, rg, 1, rect);
-                            }
-                        }
-
-                        growingFrame.Image = rg.ToBitmap();
-                    }                    
                 }
             }
+        }
+
+        private bool MyRGCriteria(Point startPt, Point candidatePt, object frameCookie)
+        {
+            CVImage frame = frameCookie as CVImage;
+
+            return frame[startPt].GrayLevel - frame[candidatePt].GrayLevel == 0;
         }
 
         private void video_SelectionChanged(object sender, EventArgs e)
@@ -113,16 +84,6 @@ namespace OpenCVDotNet.Examples
         }
 
         #endregion
-
-        private void videoPlayer_Playing(object sender, CancelEventArgs e)
-        {
-            video.ShowSelection = false;
-        }
-
-        private void videoPlayer_Pausing(object sender, CancelEventArgs e)
-        {
-            video.ShowSelection = true;
-        }
 
         private double alpha = 0.2;
         private double threshold = 0.1;
@@ -194,54 +155,6 @@ namespace OpenCVDotNet.Examples
                     bgAccum[row, col] = -1.0;
 
             bgFrame = args.NewCapture.CreateCompatibleImage();
-        }
-
-        private CVPair[] connections = 
-        { 
-            new CVPair(-1, -1),
-            new CVPair(-1, 0),
-            new CVPair(-1, 1),
-            new CVPair(0, -1),
-            new CVPair(0, 1),
-            new CVPair(1, -1),
-            new CVPair(1, 0),
-            new CVPair(1, 1) 
-        };
-
-        /// <summary>
-        /// Implements an 8-connected region growing algorithm based on histogram similarity (using back projection).
-        /// Starts with the starting pixel and checks in the back projection all the four pixel around it.
-        /// If the pixels pass some threshold, they are selected and the region is grown to contain them as well.
-        /// </summary>
-        private void RegionGrowing(CVImage backProjection, Point startPoint, CVImage outputImage, byte thresh, Rectangle boundingRect)
-        {
-            // accept only pixels in the bounding rectangle.
-            if (!boundingRect.Contains(startPoint)) return;
-
-            // continue only with pixels that are above the threshold.
-            if (backProjection[startPoint].GrayLevel <= thresh)
-            {
-                // color it in green to mark it as an edge.
-                //outputImage[startPoint] = new CVRgbPixel(0, 255, 0);
-                return;
-            }
-
-            // first, include the starting pixel in the region.
-            outputImage[startPoint] = new CVRgbPixel(255, 0, 0);
-
-            // go over all the connection points.
-            foreach (CVPair connection in connections)
-            {
-                Point connectionPoint = new Point(
-                        startPoint.X + (int) connection.Second, 
-                        startPoint.Y + (int) connection.First);
-
-                // consider this point only if it's not already in the region.
-                if (outputImage[connectionPoint].GrayLevel != 0) continue;
-
-                // recurse into the new connection point.
-                RegionGrowing(backProjection, connectionPoint, outputImage, thresh, boundingRect);
-            }
         }
     }
 }

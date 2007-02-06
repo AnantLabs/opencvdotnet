@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Reflection;
+using OpenCVDotNet;
 
 namespace OpenCVDotNet.Examples
 {
@@ -15,10 +16,13 @@ namespace OpenCVDotNet.Examples
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
+            // make sure all OpenCV errors are thrown as exceptions.
+            CVUtils.ErrorsToExceptions();
+
             ExampleSelection es = new ExampleSelection();
 
-            Assembly me = Assembly.GetCallingAssembly();
+            Assembly me = Assembly.GetExecutingAssembly();
             foreach (Type t in me.GetTypes())
             {
                 if (t.IsSubclassOf(typeof(Form)) && t != typeof(ExampleSelection))
