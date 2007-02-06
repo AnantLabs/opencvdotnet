@@ -32,9 +32,16 @@ namespace OpenCVDotNet.Examples
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (formList.SelectedItem == null) return;
+
             FormItem fi = formList.SelectedItem as FormItem;
             fi.Run();
+        }
 
+        private void formList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                button1_Click(sender, e);
         }
     }
 
