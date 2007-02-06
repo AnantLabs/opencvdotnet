@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenCVDotNet;
 
-namespace SharedUI
+namespace OpenCVDotNet.UI
 {
     public partial class VideoPlayer : Component
     {
@@ -33,6 +33,11 @@ namespace SharedUI
         public event CancelEventHandler Pausing;
 
         /// <summary>
+        /// Fired when a video file is being opened by the video player.
+        /// </summary>
+        public event OpeningEventHandler Opening;
+
+        /// <summary>
         /// Creates a video player object.
         /// </summary>
         public VideoPlayer()
@@ -46,8 +51,25 @@ namespace SharedUI
         /// <param name="path"></param>
         public void Open(string path)
         {
+            CVCapture newCapture = new CVCapture(path);
+
+            if (Opening != null)
+            {
+                OpeningEventArgs oea = new OpeningEventArgs();
+                oea.CurrentCapture = capture;
+                oea.NewCapture = newCapture;
+                oea.Cancel = false;
+                Opening(this, oea);
+
+                if (oea.Cancel)
+                {
+                    newCapture.Dispose();
+                    return;
+                }
+            }
+
             videoTimer.Enabled = false;
-            capture = new CVCapture(path);
+            capture = newCapture;
             videoTimer.Interval = 1000 / capture.FramesPerSecond;
 
             HandleNextFrame();
@@ -173,9 +195,7 @@ namespace SharedUI
                 NextFrameEventArgs ea = new NextFrameEventArgs();
                 ea.Frame = lastFrame;
                 ea.Capture = capture;
-                ea.Player = this;
-
-                NextFrame(ea);
+                NextFrame(this, ea);
             }
         }
 
@@ -187,10 +207,17 @@ namespace SharedUI
 
     public class NextFrameEventArgs : EventArgs
     {
-        public VideoPlayer Player;
         public CVImage Frame;
         public CVCapture Capture;
     }
 
-    public delegate void NextFrameEventHandler(NextFrameEventArgs args);
+    public class OpeningEventArgs : EventArgs
+    {
+        public CVCapture CurrentCapture;
+        public CVCapture NewCapture;
+        public bool Cancel;
+    }
+
+    public delegate void NextFrameEventHandler(VideoPlayer sender, NextFrameEventArgs args);
+    public delegate void OpeningEventHandler(VideoPlayer sender, OpeningEventArgs args);
 }

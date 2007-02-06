@@ -135,6 +135,19 @@ namespace OpenCVDotNet
 			cvReleaseImage(&ptr);
 		}
 
+		property CVRgbPixel^ default[System::Drawing::Point]
+		{
+			CVRgbPixel^ get(System::Drawing::Point pt)
+			{
+				return this[pt.Y, pt.X];
+			}
+
+			void set(System::Drawing::Point pt, CVRgbPixel^ val)
+			{
+				this[pt.Y, pt.X] = val;
+			}
+		}
+
 		property CVRgbPixel^ default[int, int]
 		{
 			CVRgbPixel^ get(int row, int col)
