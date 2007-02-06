@@ -10,14 +10,14 @@ using OpenCVDotNet.UI;
 
 namespace OpenCVDotNet.Examples
 {
-    public partial class ColorSegmentation : Form
+    public partial class History : Form
     {
         private CVHistogram selectionHistogram;
         private double[,] bgAccum;
         private CVImage bgFrame;
 
 
-        public ColorSegmentation()
+        public History()
         {
             InitializeComponent();
         }

@@ -31,7 +31,7 @@
   <ItemGroup>
     <Reference Include="OpenCVDotNet, Version=1.0.2580.17943, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\src\OpenCVDotNet\Debug\OpenCVDotNet.dll</HintPath>
+      <HintPath>..\src\OpenCVDotNet\Debug\OpenCVDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -41,11 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorSegmentation.cs">
+    <Compile Include="History.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ColorSegmentation.Designer.cs">
-      <DependentUpon>ColorSegmentation.cs</DependentUpon>
+    <Compile Include="History.Designer.cs">
+      <DependentUpon>History.cs</DependentUpon>
     </Compile>
     <Compile Include="ExampleSelection.cs">
       <SubType>Form</SubType>
@@ -84,9 +84,9 @@
       <DependentUpon>Path.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <EmbeddedResource Include="ColorSegmentation.resx">
+    <EmbeddedResource Include="History.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>ColorSegmentation.cs</DependentUpon>
+      <DependentUpon>History.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ExampleSelection.resx">
       <SubType>Designer</SubType>
@@ -115,7 +115,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\OpenCVDotNet.UI\OpenCVDotNet.UI.csproj">
+    <ProjectReference Include="..\src\OpenCVDotNet.UI\OpenCVDotNet.UI.csproj">
       <Project>{D7A04B8D-BC53-4210-8424-8EE5C79EF3C2}</Project>
       <Name>OpenCVDotNet.UI</Name>
     </ProjectReference>

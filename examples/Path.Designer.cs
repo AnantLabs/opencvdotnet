@@ -43,8 +43,10 @@ namespace OpenCVDotNet.Examples
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
+            this.initHisto = new OpenCVDotNet.UI.ColorHistogram();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
+            this.roiHisto = new OpenCVDotNet.UI.ColorHistogram();
             this.label3 = new System.Windows.Forms.Label();
             this.regionOfInterest = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -62,14 +64,12 @@ namespace OpenCVDotNet.Examples
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.iterationsCount = new System.Windows.Forms.ToolStripTextBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.segPicture = new System.Windows.Forms.PictureBox();
-            this.initHisto = new OpenCVDotNet.UI.ColorHistogram();
-            this.roiHisto = new OpenCVDotNet.UI.ColorHistogram();
-            this.originalImage = new OpenCVDotNet.UI.SelectPictureBox();
-            this.backgroundSubt = new System.Windows.Forms.PictureBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.originalImage = new OpenCVDotNet.UI.SelectPictureBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.segPicture = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.backgroundSubt = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.status.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.backProjectImage)).BeginInit();
@@ -80,8 +80,8 @@ namespace OpenCVDotNet.Examples
             ((System.ComponentModel.ISupportInitialize)(this.regionOfInterest)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.segPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.originalImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.segPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.backgroundSubt)).BeginInit();
             this.SuspendLayout();
             // 
@@ -211,6 +211,14 @@ namespace OpenCVDotNet.Examples
             this.label4.Text = "Initial Histogram";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // initHisto
+            // 
+            this.initHisto.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.initHisto.Location = new System.Drawing.Point(4, 25);
+            this.initHisto.Name = "initHisto";
+            this.initHisto.Size = new System.Drawing.Size(204, 128);
+            this.initHisto.TabIndex = 18;
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
@@ -241,6 +249,14 @@ namespace OpenCVDotNet.Examples
             this.label1.TabIndex = 17;
             this.label1.Text = "ROI Color Histogram";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // roiHisto
+            // 
+            this.roiHisto.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.roiHisto.Location = new System.Drawing.Point(4, 25);
+            this.roiHisto.Name = "roiHisto";
+            this.roiHisto.Size = new System.Drawing.Size(204, 129);
+            this.roiHisto.TabIndex = 18;
             // 
             // label3
             // 
@@ -404,6 +420,32 @@ namespace OpenCVDotNet.Examples
             this.tableLayoutPanel4.Size = new System.Drawing.Size(617, 602);
             this.tableLayoutPanel4.TabIndex = 15;
             // 
+            // label7
+            // 
+            this.label7.BackColor = System.Drawing.SystemColors.Desktop;
+            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label7.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label7.Location = new System.Drawing.Point(311, 301);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(303, 20);
+            this.label7.TabIndex = 25;
+            this.label7.Text = "Background Subtraction";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // originalImage
+            // 
+            this.originalImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.originalImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.originalImage.Location = new System.Drawing.Point(3, 23);
+            this.originalImage.Name = "originalImage";
+            this.originalImage.SelectionRect = new System.Drawing.Rectangle(10, 10, 100, 100);
+            this.originalImage.ShowSelection = true;
+            this.originalImage.Size = new System.Drawing.Size(302, 275);
+            this.originalImage.TabIndex = 22;
+            this.originalImage.TabStop = false;
+            this.originalImage.SelectionChanged += new System.EventHandler(this.originalImage_SelectionChanged);
+            // 
             // label5
             // 
             this.label5.BackColor = System.Drawing.SystemColors.Desktop;
@@ -416,6 +458,16 @@ namespace OpenCVDotNet.Examples
             this.label5.TabIndex = 20;
             this.label5.Text = "Video";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // segPicture
+            // 
+            this.segPicture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.segPicture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.segPicture.Location = new System.Drawing.Point(311, 23);
+            this.segPicture.Name = "segPicture";
+            this.segPicture.Size = new System.Drawing.Size(303, 275);
+            this.segPicture.TabIndex = 21;
+            this.segPicture.TabStop = false;
             // 
             // label6
             // 
@@ -430,44 +482,6 @@ namespace OpenCVDotNet.Examples
             this.label6.Text = "Segmentation";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // segPicture
-            // 
-            this.segPicture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.segPicture.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.segPicture.Location = new System.Drawing.Point(311, 23);
-            this.segPicture.Name = "segPicture";
-            this.segPicture.Size = new System.Drawing.Size(303, 275);
-            this.segPicture.TabIndex = 21;
-            this.segPicture.TabStop = false;
-            // 
-            // initHisto
-            // 
-            this.initHisto.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.initHisto.Location = new System.Drawing.Point(4, 25);
-            this.initHisto.Name = "initHisto";
-            this.initHisto.Size = new System.Drawing.Size(204, 128);
-            this.initHisto.TabIndex = 18;
-            // 
-            // roiHisto
-            // 
-            this.roiHisto.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.roiHisto.Location = new System.Drawing.Point(4, 25);
-            this.roiHisto.Name = "roiHisto";
-            this.roiHisto.Size = new System.Drawing.Size(204, 129);
-            this.roiHisto.TabIndex = 18;
-            // 
-            // originalImage
-            // 
-            this.originalImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.originalImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.originalImage.Location = new System.Drawing.Point(3, 23);
-            this.originalImage.Name = "originalImage";
-            this.originalImage.SelectionRect = new System.Drawing.Rectangle(10, 10, 100, 100);
-            this.originalImage.Size = new System.Drawing.Size(302, 275);
-            this.originalImage.TabIndex = 22;
-            this.originalImage.TabStop = false;
-            this.originalImage.SelectionChanged += new System.EventHandler(this.originalImage_SelectionChanged);
-            // 
             // backgroundSubt
             // 
             this.backgroundSubt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -478,20 +492,7 @@ namespace OpenCVDotNet.Examples
             this.backgroundSubt.TabIndex = 24;
             this.backgroundSubt.TabStop = false;
             // 
-            // label7
-            // 
-            this.label7.BackColor = System.Drawing.SystemColors.Desktop;
-            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label7.Location = new System.Drawing.Point(311, 301);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(303, 20);
-            this.label7.TabIndex = 25;
-            this.label7.Text = "Background Subtraction";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // Segmentation
+            // Path
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -502,8 +503,8 @@ namespace OpenCVDotNet.Examples
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Segmentation";
-            this.Text = "Segmentation";
+            this.Name = "Path";
+            this.Text = "Path Creation";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.SizeChanged += new System.EventHandler(this.Histograms_SizeChanged);
             this.menuStrip1.ResumeLayout(false);
@@ -519,8 +520,8 @@ namespace OpenCVDotNet.Examples
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.segPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.originalImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.segPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.backgroundSubt)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
