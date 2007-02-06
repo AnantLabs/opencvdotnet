@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OpenCVDotNet.Examples</RootNamespace>
-    <AssemblyName>Segmentation</AssemblyName>
+    <AssemblyName>Examples</AssemblyName>
     <StartupObject>OpenCVDotNet.Examples.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -47,6 +47,31 @@
     <Compile Include="ColorSegmentation.Designer.cs">
       <DependentUpon>ColorSegmentation.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExampleSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExampleSelection.Designer.cs">
+      <DependentUpon>ExampleSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Histograms.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Histograms.Designer.cs">
+      <DependentUpon>Histograms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MeanShift.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MeanShift.Designer.cs">
+      <DependentUpon>MeanShift.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MovingAverage.cs" />
+    <Compile Include="Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -62,6 +87,22 @@
     <EmbeddedResource Include="ColorSegmentation.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ColorSegmentation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExampleSelection.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExampleSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Histograms.resx">
+      <DependentUpon>Histograms.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MeanShift.resx">
+      <DependentUpon>MeanShift.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options.resx">
+      <DependentUpon>Options.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
