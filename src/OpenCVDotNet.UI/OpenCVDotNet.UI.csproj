@@ -7,7 +7,7 @@
     <ProjectGuid>{D7A04B8D-BC53-4210-8424-8EE5C79EF3C2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharedUI</RootNamespace>
+    <RootNamespace>OpenCVDotNet.UI</RootNamespace>
     <AssemblyName>SharedUI</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

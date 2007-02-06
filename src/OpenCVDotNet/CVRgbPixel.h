@@ -27,6 +27,14 @@ namespace OpenCVDotNet
 		{
 			Byte get()
 			{
+				return this->GrayLevel;
+			}
+		}
+
+		property Byte GrayLevel
+		{
+			Byte get()
+			{
 				Byte bw_value = (Byte)
 					((double) b * 0.114 + 
 					 (double) g * 0.587 + 
