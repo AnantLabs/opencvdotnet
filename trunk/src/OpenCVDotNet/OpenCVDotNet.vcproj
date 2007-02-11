@@ -115,6 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\OpenCV\cv\include&quot;;&quot;C:\Program Files\OpenCV\cxcore\include&quot;;&quot;C:\Program Files\OpenCV\cvaux\include&quot;;&quot;C:\Program Files\OpenCV\otherlibs\highgui&quot;;&quot;C:\Program Files\OpenCV\otherlibs\cvcam\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -132,8 +133,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(NoInherit) cv.lib cxcore.lib highgui.lib"
+				AdditionalDependencies="$(NoInherit) cv.lib cxcore.lib highgui.lib user32.lib gdi32.lib"
+				OutputFile="..\..\$(ProjectName).dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\OpenCV\lib&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
