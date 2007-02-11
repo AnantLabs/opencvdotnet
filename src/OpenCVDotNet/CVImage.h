@@ -49,6 +49,8 @@ namespace OpenCVDotNet
 		unsigned char r, g, b;
 		System::Drawing::Rectangle rect;
 		CvSeq* contour;
+		Color avgColor;
+
 	public:
 		CVConnectedComp(CvConnectedComp* in)
 		{
@@ -58,6 +60,8 @@ namespace OpenCVDotNet
 			r = rgb->r;
 			g = rgb->g;
 			b = rgb->b;
+
+			avgColor = Color::FromArgb(r, g, b);
 
 			rect = System::Drawing::Rectangle(in->rect.x, in->rect.y, in->rect.width, in->rect.height);
 			contour = in->contour;
@@ -73,6 +77,22 @@ namespace OpenCVDotNet
 			System::Drawing::Rectangle get()
 			{
 				return this->rect;
+			}
+		}
+		
+		property double Area
+		{
+			double get()
+			{
+				return this->area;
+			}
+		}
+
+		property Color AverageColor
+		{
+			Color get()
+			{
+				return this->avgColor;
 			}
 		}
 	};
@@ -314,16 +334,27 @@ namespace OpenCVDotNet
 
 		CVHistogram^ CalcHistogram(int binsSize)
 		{
+			return CalcHistogram(binsSize, nullptr);
+		}
+
+
+		CVHistogram^ CalcHistogram(int binsSize, CVImage^ mask)
+		{
 			array<Int32>^ binSizes = gcnew array<Int32>(3);
 			array<CVPair^>^ binRanges = gcnew array<CVPair^>(3);
 
 			binSizes[0] = binSizes[1] = binSizes[2] = binsSize;
 			binRanges[0] = binRanges[1] = binRanges[2] = gcnew CVPair(0, 255);
 
-			return CalcHistogram(binSizes, binRanges);
+			return CalcHistogram(binSizes, binRanges, mask);
 		}
 
 		CVHistogram^ CalcHistogram(array<int>^ binSizes, array<CVPair^>^ binRanges)
+		{
+			return CalcHistogram(binSizes, binRanges, nullptr);
+		}
+
+		CVHistogram^ CalcHistogram(array<int>^ binSizes, array<CVPair^>^ binRanges, CVImage^ mask)
 		{
 			CVHistogram^ h = gcnew CVHistogram(binSizes, binRanges);
 
@@ -339,7 +370,11 @@ namespace OpenCVDotNet
 					images[i] = planes[i]->Internal;
 			}
 
-			cvCalcHist(images, h->Internal);
+			CvArr* maskArr = NULL;
+			if (mask != nullptr)
+				maskArr = mask->Array;
+
+			cvCalcHist(images, h->Internal, 0, maskArr);
 
 			delete [] images;
 
@@ -476,6 +511,11 @@ namespace OpenCVDotNet
 			return backProjection;
 		}
 
+		CVConnectedComp^ MeanShift(System::Drawing::Rectangle window)
+		{
+			return MeanShift(window, 0.1);
+		}
+
 		CVConnectedComp^ MeanShift(System::Drawing::Rectangle window, int maxIterations)
 		{
 			return MeanShift(window, CV_TERMCRIT_ITER, maxIterations);
@@ -535,11 +575,6 @@ namespace OpenCVDotNet
 				color, thickness);
 		}
 
-		CVConnectedComp^ CamShift(System::Drawing::Rectangle window)
-		{
-			return CamShift(window, 0, 0, 0.0);
-		}
-
 		CVConnectedComp^ CamShift(System::Drawing::Rectangle window, double eps)
 		{
 			return CamShift(window, CV_TERMCRIT_EPS, 0, eps);
@@ -562,6 +597,13 @@ namespace OpenCVDotNet
 			CVImage^ n = gcnew CVImage(NULL);
 			n->image = cvCloneImage(this->Internal);
 			return n;
+		}
+
+		CVImage^ ToGrayscale()
+		{
+			CVImage^ gs = gcnew CVImage(RegionOfInterest.Width, RegionOfInterest.Height, Depth, 1);
+			cvConvertImage(this->Internal, gs->Internal);
+			return gs;
 		}
 
 	private:

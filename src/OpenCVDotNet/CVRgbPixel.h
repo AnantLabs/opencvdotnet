@@ -19,6 +19,13 @@ namespace OpenCVDotNet
 			this->g = g;
 		}
 
+		CVRgbPixel(Color col)
+		{
+			this->r = col.R;
+			this->b = col.B;
+			this->g = col.G;
+		}
+
 		property Byte R { Byte get() { return r; } }
 		property Byte G { Byte get() { return g; } }
 		property Byte B { Byte get() { return b; } }
@@ -46,6 +53,11 @@ namespace OpenCVDotNet
 		virtual String^ ToString() override
 		{
 			return String::Format("({0},{1},{2})", r, g, b);
+		}
+
+		Color ToColor()
+		{
+			return Color::FromArgb(this->R, this->G, this->B);
 		}
 	};
 };
