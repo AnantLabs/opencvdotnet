@@ -59,6 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(NoInherit) cv.lib cxcore.lib highgui.lib user32.lib gdi32.lib"
+				Version="0.6"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
