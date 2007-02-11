@@ -14,6 +14,8 @@ namespace OpenCVDotNet.UI
         private SelectBox selectBox;
         private bool showSelectBox = true;
         private bool showCross = false;
+        private List<CrossMarker> markers = new List<CrossMarker>();
+        private bool readOnly = false;
 
         public SelectPictureBox()
         {
@@ -29,6 +31,36 @@ namespace OpenCVDotNet.UI
             this.selectBox.AddHandle(new HandleResizeSouth());
             this.selectBox.AddHandle(new HandleResizeEast());
             this.selectBox.OnBoxChanged += new EventHandler(selectBox_OnBoxChanged);
+        }
+
+        /// <summary>
+        /// Adds a cross marker to the picture box.
+        /// </summary>
+        public CrossMarker AddMarker(CrossMarker cm)
+        {
+            markers.Add(cm);
+            Invalidate();
+            return cm;
+        }
+
+        /// <summary>
+        /// Adds a cross marker to the picture box.
+        /// </summary>
+        public CrossMarker AddMarker(Point pt, Color col)
+        {
+            pt.X -= selectBox.Rect.Left;
+            pt.Y -= selectBox.Rect.Top;
+            CrossMarker cm = new CrossMarker(pt, col);
+            return AddMarker(cm);
+        }
+
+        /// <summary>
+        /// Clears all picture box markers.
+        /// </summary>
+        public void ClearMarkers()
+        {
+            markers.Clear();
+            Invalidate();
         }
 
         void selectBox_OnBoxChanged(object sender, EventArgs e)
@@ -51,31 +83,46 @@ namespace OpenCVDotNet.UI
             }
         }
 
+        /// <summary>
+        /// Determines whether the user can manipulate the selection box or just see it.
+        /// </summary>
+        public bool ReadOnly
+        {
+            get { return readOnly; }
+
+            set 
+            { 
+                readOnly = value;
+                Invalidate();
+            }
+        }
+
         public event EventHandler SelectionChanged;
 
         void SelectPictureBox_MouseUp(object sender, MouseEventArgs e)
         {
+            if (readOnly) return;
             selectBox.OnMouseUp(e);
         }
 
         void SelectPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
+            if (readOnly) return;
             selectBox.OnMouseDown(e);
         }
 
         void SelectPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
+            if (readOnly) return;
             selectBox.OnMouseMove(e);
         }
-
-
 
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
 
             if (showSelectBox)
-                this.selectBox.OnPaint(pe);
+                this.selectBox.OnPaint(pe, !readOnly);
 
             if (showCross)
             {
@@ -92,6 +139,11 @@ namespace OpenCVDotNet.UI
                     Pens.Red,
                     midPoint.X - CROSS_SIZE, midPoint.Y,
                     midPoint.X + CROSS_SIZE, midPoint.Y);
+            }
+
+            foreach (CrossMarker cm in markers)
+            {
+                cm.OnPaint(selectBox.Rect, pe);
             }
         }
 
@@ -119,6 +171,52 @@ namespace OpenCVDotNet.UI
                 showCross = value;
                 Invalidate();
             }
+        }
+    }
+
+    /// <summary>
+    /// Represents a cross marker that can be positioned on top of a SelectPictureBox.
+    /// </summary>
+    public class CrossMarker
+    {
+        private const int CROSS_SIZE = 5;
+
+        private Point pt;
+        private Pen pen;
+
+        /// <summary>
+        /// Creates a new cross marker.
+        /// </summary>
+        public CrossMarker(Point pt, Pen pen)
+        {
+            this.pt = pt;
+            this.pen = pen;
+        }
+
+        /// <summary>
+        /// Creates a new cross marker.
+        /// </summary>
+        public CrossMarker(Point pt, Color color)
+        {
+            this.pt = pt;
+            this.pen = new Pen(color);
+        }
+
+        /// <summary>
+        /// Called when the cross should be painted.
+        /// </summary>
+        /// <param name="pe">Paint event argumjents</param>
+        public void OnPaint(Rectangle selectionRect, PaintEventArgs pe)
+        {
+            pe.Graphics.DrawLine(
+                pen,
+                selectionRect.Left + pt.X, selectionRect.Top + pt.Y - CROSS_SIZE,
+                selectionRect.Left + pt.X, selectionRect.Top + pt.Y + CROSS_SIZE);
+
+            pe.Graphics.DrawLine(
+                pen,
+                selectionRect.Left + pt.X - CROSS_SIZE, selectionRect.Top + pt.Y,
+                selectionRect.Left + pt.X + CROSS_SIZE, selectionRect.Top + pt.Y);
         }
     }
 
@@ -268,13 +366,16 @@ namespace OpenCVDotNet.UI
             handles.Add(handle);
         }
 
-        public virtual void OnPaint(PaintEventArgs pe)
+        public virtual void OnPaint(PaintEventArgs pe, bool drawHandles)
         {
             Pen p = new Pen(Brushes.DarkBlue, 2.0f);
             pe.Graphics.DrawRectangle(p, this.Rect);
 
-            foreach (SelectBoxHandle sbh in handles)
-                sbh.OnPaint(pe);
+            if (drawHandles)
+            {
+                foreach (SelectBoxHandle sbh in handles)
+                    sbh.OnPaint(pe);
+            }
         }
 
         public bool HitTest(int x, int y)

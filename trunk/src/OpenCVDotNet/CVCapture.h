@@ -13,20 +13,25 @@ namespace OpenCVDotNet
 		CvCapture* capture;
 		String^ filename;
 
+		CVImage^ asImage;
+
 	public:
 		CVCapture(String^ filename)
 		{
 			capture = NULL;
+			asImage = nullptr;
 			Open(filename);
 		}
 
 		CVCapture()
 		{
+			asImage = nullptr;
 			capture = cvCreateCameraCapture(CV_CAP_ANY);
 		}
 
 		CVCapture(int cameraId)
 		{
+			asImage = nullptr;
 			capture = cvCreateCameraCapture(cameraId);
 		}
 
@@ -37,16 +42,24 @@ namespace OpenCVDotNet
 
 		void Release()
 		{
-			if (capture == NULL) return;
+			if (asImage != nullptr)
+			{
+				asImage->Release();
+				asImage = nullptr;
+			}
 
-			pin_ptr<CvCapture*> cap = &capture;
-			cvReleaseCapture(cap);
+			if (capture != NULL)
+			{
+				pin_ptr<CvCapture*> cap = &capture;
+				cvReleaseCapture(cap);
+			}
 		}
 
 		property int Width
 		{
 			int get()
 			{
+				if (asImage != nullptr) return asImage->Width;
 				return (int) cvGetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH);
 			}
 		}
@@ -55,12 +68,15 @@ namespace OpenCVDotNet
 		{
 			int get()
 			{
+				if (asImage != nullptr) return asImage->Height;
 				return (int) cvGetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT);
 			}
 		}
 
 		CVImage^ QueryFrame()
 		{
+			if (asImage != nullptr) return asImage->Clone();
+
 			IplImage* frame = cvQueryFrame(capture);
 			if (frame == NULL) return nullptr;
 			CVImage^ newImage = gcnew CVImage(gcnew CVImage(frame));
@@ -70,15 +86,28 @@ namespace OpenCVDotNet
 		void Open(String^ filename)
 		{
 			Release();
+			
+			capture = NULL;
+			asImage = nullptr;
 
-			char fn[1024 + 1];
-			CVUtils::StringToCharPointer(filename, fn, 1024);
-			capture = cvCreateFileCapture(fn);
+			String^ ext = System::IO::Path::GetExtension(filename);
 
-			if (capture == NULL)
+			// if the extension of the filename is not AVI, try opening as an image.
+			if (ext->ToUpper()->CompareTo(".AVI") != 0)
 			{
-				throw gcnew CVException(
-					String::Format("Unable to open file	'{0}' for capture", filename));
+				asImage = gcnew CVImage(filename);
+			}
+			else
+			{
+				char fn[1024 + 1];
+				CVUtils::StringToCharPointer(filename, fn, 1024);
+				capture = cvCreateFileCapture(fn);
+
+				if (capture == NULL)
+				{
+					throw gcnew CVException(
+						String::Format("Unable to open file	'{0}' for capture", filename));
+				}
 			}
 
 			this->filename = filename;
@@ -88,6 +117,9 @@ namespace OpenCVDotNet
 		{
 			int get()
 			{
+				// if this is an image, return 30 as default FPS.
+				if (asImage != nullptr) return 30;
+				
 				return (int) cvGetCaptureProperty(capture, CV_CAP_PROP_FPS);
 			}
 		}

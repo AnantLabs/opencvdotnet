@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D7A04B8D-BC53-4210-8424-8EE5C79EF3C2}</ProjectGuid>
+    <ProjectGuid>{00F243A0-FCC4-48AE-A219-62EB8D74EEC2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenCVDotNet.UI</RootNamespace>
-    <AssemblyName>OpenCVDotNet.UI</AssemblyName>
+    <RootNamespace>OpenCVDotNet.Algorithms</RootNamespace>
+    <AssemblyName>OpenCVDotNet.Algs</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,55 +22,25 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenCVDotNet, Version=1.0.2598.21483, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OpenCVDotNet, Version=1.0.2598.21842, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OpenCVDotNet\Debug\OpenCVDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorHistogram.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ColorHistogram.Designer.cs">
-      <DependentUpon>ColorHistogram.cs</DependentUpon>
-    </Compile>
+    <Compile Include="MaskedHistogram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SelectPictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="SelectPictureBox.Designer.cs">
-      <DependentUpon>SelectPictureBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ValueOverTime.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ValueOverTime.Designer.cs">
-      <DependentUpon>ValueOverTime.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VideoPlayer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ColorHistogram.resx">
-      <DependentUpon>ColorHistogram.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ValueOverTime.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ValueOverTime.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="RegionGrowing.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

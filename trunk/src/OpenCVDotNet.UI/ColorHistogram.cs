@@ -17,13 +17,18 @@ namespace OpenCVDotNet.UI
             InitializeComponent();
         }
 
-        int BinsPerChannel
+        public int BinsPerChannel
         {
             get { return binsPerChannel; }
             set { binsPerChannel = value; }
         }
 
         public void ShowHistogram(CVImage image)
+        {
+            ShowHistogram(image, null);
+        }
+
+        public void ShowHistogram(CVImage image, CVImage mask)
         {
             if (image == null) return;
 
@@ -36,9 +41,9 @@ namespace OpenCVDotNet.UI
             CVPair[] ranges = { new CVPair(0, 255) };
 
             // calculate histogram for red, green and blue channels (seperately).
-            CVHistogram histoRed = planes[0].CalcHistogram(bins, ranges);
-            CVHistogram histoBlue = planes[1].CalcHistogram(bins, ranges);
-            CVHistogram histoGreen = planes[2].CalcHistogram(bins, ranges);
+            CVHistogram histoRed = planes[0].CalcHistogram(bins, ranges, mask);
+            CVHistogram histoBlue = planes[1].CalcHistogram(bins, ranges, mask);
+            CVHistogram histoGreen = planes[2].CalcHistogram(bins, ranges, mask);
 
             // dispose of plane images.
             foreach (CVImage img in planes)
@@ -82,9 +87,9 @@ namespace OpenCVDotNet.UI
                 Color colColor = Color.FromArgb(color[2], color[1], color[0]);
                 Color colMarker = Color.FromArgb(markerColor[2], markerColor[1], markerColor[0]);
 
-                outputImage.DrawRectangle(new Rectangle(bin * binWidth, imageHeight, binWidth - 1, -binHeight), colColor);
+                outputImage.DrawRectangle(new Rectangle(bin * binWidth, imageHeight - binHeight, binWidth - 1, binHeight), Color.White /* colColor */);
                 outputImage.DrawRectangle(new Rectangle(bin * binWidth, imageHeight - binHeight, binWidth - 1, 1), colMarker);
-                outputImage.DrawRectangle(new Rectangle(bin * binWidth, imageHeight, 1, -binHeight), colMarker);
+                outputImage.DrawRectangle(new Rectangle(bin * binWidth, imageHeight - binHeight, 1, binHeight), colMarker);
             }
 
             window.Image = outputImage.ToBitmap();
