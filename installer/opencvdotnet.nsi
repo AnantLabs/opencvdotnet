@@ -5,7 +5,7 @@ Name OpenCVDotNet
 
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.5
+!define VERSION 0.6
 !define COMPANY "Elad Ben-Israel"
 !define URL http://code.google.com/p/opencvdotnet/
 !define OPENCV "C:\Program Files\OpenCV\bin"

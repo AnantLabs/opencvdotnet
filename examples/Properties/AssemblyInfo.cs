@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OpenCVDotNet.UI")]
+[assembly: AssemblyTitle("OpenCVDotNet.Examples.Properties")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OpenCVDotNet")]
+[assembly: AssemblyProduct("OpenCVDotNet.Examples.Properties")]
 [assembly: AssemblyCopyright("Copyright ©  2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a8e2ab8e-16b8-42e7-a9b3-64c658d9bdb5")]
+[assembly: Guid("ba9757f9-4ec7-41ac-ac84-d39d6658fc9d")]
 
 // Version information for an assembly consists of the following four values:
 //
