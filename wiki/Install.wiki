@@ -1,0 +1,13 @@
+#summary One-sentence summary of this page.
+
+= Installing OpenCVDotNet =
+
+If all you want is to play around with the binary version of OpenCVDotNet (write some OpenCV apps from C#), follow these steps:
+
+ 1. Download and install [http://sourceforge.net/project/showfiles.php?group_id=22870&package_id=16937 OpenCV]. Make sure to install OpenCV to {{{C:\Program Files\OpenCV}}}, or otherwise OpenCVDotNet DLLs will not be able to find it.
+
+ 2. Download and install [http://msdn.microsoft.com/vstudio/express/visualcsharp/download/ Visual C# Express]
+
+ 3. Install the latest version of [http://code.google.com/p/opencvdotnet/downloads/list OpenCVDotNet].
+
+After installation, binaries and source code will be installed to {{{C:\Program Files\OpenCVDotNet}}}. In the Start Menu, you can open "OpenCVDotNet Examples", which will open up Visual C# Express with the examples solution.
