@@ -135,6 +135,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(NoInherit) cv.lib cxcore.lib highgui.lib user32.lib gdi32.lib"
 				OutputFile="..\..\$(ProjectName).dll"
+				Version="0.5"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;C:\Program Files\OpenCV\lib&quot;"
 				GenerateDebugInformation="true"
