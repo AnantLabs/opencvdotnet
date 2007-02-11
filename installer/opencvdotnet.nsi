@@ -10,7 +10,7 @@ Name OpenCVDotNet
 !define URL http://code.google.com/p/opencvdotnet/
 !define OPENCV "C:\Program Files\OpenCV\bin"
 !define OPENCVERROR "OpenCV binaries must be installed under ${OPENCV}. OpenCV can be downloaded from http://opencvlibrary.sourceforge.net"
-!define SETUP "opencvdotnet-setup.exe"
+!define SETUP "opencvdotnet-${VERSION}-setup.exe"
 !define UNINSTALL "$INSTDIR\opencvdotnet-uninstall.exe"
 
 # MUI defines
