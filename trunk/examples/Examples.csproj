@@ -29,13 +29,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenCVDotNet, Version=1.0.2598.19431, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OpenCVDotNet, Version=1.0.2598.21483, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\OpenCVDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenCVDotNet.UI, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\OpenCVDotNet.UI.dll</HintPath>
+      <HintPath>..\src\OpenCVDotNet\Debug\OpenCVDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -46,6 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RegionGrowing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +91,12 @@
       <DependentUpon>Path.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="MaskedHistogramTracker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MaskedHistogramTracker.Designer.cs">
+      <DependentUpon>MaskedHistogramTracker.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="History.resx">
       <SubType>Designer</SubType>
       <DependentUpon>History.cs</DependentUpon>
@@ -114,10 +121,29 @@
       <DependentUpon>Path.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="RegionGrowing.resx">
       <SubType>Designer</SubType>
       <DependentUpon>RegionGrowing.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MaskedHistogramTracker.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MaskedHistogramTracker.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\OpenCVDotNet.Algorithms\OpenCVDotNet.Algorithms.csproj">
+      <Project>{00F243A0-FCC4-48AE-A219-62EB8D74EEC2}</Project>
+      <Name>OpenCVDotNet.Algorithms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\src\OpenCVDotNet.UI\OpenCVDotNet.UI.csproj">
+      <Project>{D7A04B8D-BC53-4210-8424-8EE5C79EF3C2}</Project>
+      <Name>OpenCVDotNet.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
