@@ -15,12 +15,10 @@ namespace OpenCVDotNet.Algorithms
         /// Creates a new image that will be used as a mask for the histogram calculation.
         /// All forground points will be colored blue and all background points will be colored red.
         /// </summary>
-        public static CVImage PrepareMask(CVImage image, Point[] forgroundPoints,Point[] backgroundPoints, bool includeNeautral, int floodFillThreshold)
+        public static CVImage PrepareMask(CVImage image, Point[] forgroundPoints, Point[] backgroundPoints, bool includeNeautral, int floodFillThreshold)
         {
             CVImage outputImage = image.Clone();
             outputImage.Zero();
-
-            Rectangle region = image.RegionOfInterest;
 
             FloodFillParams ffp = new FloodFillParams();
             ffp.Frame = image;
@@ -58,7 +56,10 @@ namespace OpenCVDotNet.Algorithms
                 }
             }
 
-            return outputImage;
+            // return as a grayscale image.
+            CVImage grayscale = outputImage.ToGrayscale();
+            outputImage.Release();
+            return grayscale;
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace OpenCVDotNet.Algorithms
                 for (int col = 0; col < image.Width; ++col)
                 {
                     // copy everything that's not background.
-                    if (mask[row, col].ToColor().ToArgb() != BG_COLOR.ToArgb())
+                    if (mask[row, col].ToColor().ToArgb() != Color.Black.ToArgb())
                     {
                         outputImage[row, col] = image[row, col];
                     }

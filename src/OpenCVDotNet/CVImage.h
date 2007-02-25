@@ -16,13 +16,6 @@
 
 namespace OpenCVDotNet
 {
-	struct RgbPixel
-	{
-		Byte b;
-		Byte g;
-		Byte r;
-	};
-
 	public enum class CVInterpolation
 	{
 		NearestNeigbor = CV_INTER_NN,
@@ -56,12 +49,7 @@ namespace OpenCVDotNet
 		{
 			area = in->area;
 
-			RgbPixel* rgb = (RgbPixel*) in->value.val;
-			r = rgb->r;
-			g = rgb->g;
-			b = rgb->b;
-
-			avgColor = Color::FromArgb(r, g, b);
+			avgColor = CVUtils::ScalarToColor(in->value);
 
 			rect = System::Drawing::Rectangle(in->rect.x, in->rect.y, in->rect.width, in->rect.height);
 			contour = in->contour;
@@ -173,20 +161,57 @@ namespace OpenCVDotNet
 			}
 		}
 
+		char* GetPixelPtr(int row, int col)
+		{
+			if (row < 0 || row >= Height || col < 0 || col >= Width)
+			{
+				throw gcnew CVException(String::Format("Attempt to access a pixel ({0},{1}) outside of bounds of the image (w={2},h={3})",
+					col, row, Width, Height));
+			}
+
+			char* rowPtr = image->imageData + row * image->widthStep;
+			char* pixelPtr = rowPtr + (col * image->nChannels);
+			return pixelPtr;
+		}
+
 		property CVRgbPixel^ default[int, int]
 		{
 			CVRgbPixel^ get(int row, int col)
 			{
-				RgbPixel* rowPixels = ((RgbPixel*)(image->imageData + row * image->widthStep));
-				return gcnew CVRgbPixel(rowPixels[col].r, rowPixels[col].g, rowPixels[col].b);
+				char* pixel = GetPixelPtr(row, col);
+
+				if (Channels == 3)
+				{
+					return gcnew CVRgbPixel(pixel[2], pixel[1], pixel[0]);
+				}
+				else if (Channels == 1)
+				{
+					return gcnew CVRgbPixel(0, 0, pixel[0]);
+				}
+				else
+				{
+					return nullptr;
+				}
 			}
 
 			void set(int row, int col, CVRgbPixel^ value)
 			{
-				RgbPixel* rowPixels = ((RgbPixel*)(image->imageData + row * image->widthStep));
-				rowPixels[col].r = value->R;
-				rowPixels[col].g = value->G;
-				rowPixels[col].b = value->B;
+				char* pixel = GetPixelPtr(row, col);
+
+				if (Channels == 3)
+				{
+					pixel[2] = value->R;
+					pixel[1] = value->G;
+					pixel[0] = value->B;
+				}
+				else if (Channels == 1)
+				{
+					pixel[0] = value->B;
+				}
+				else 
+				{
+					assert(false);
+				}
 			}
 		}
 
@@ -601,9 +626,20 @@ namespace OpenCVDotNet
 
 		CVImage^ ToGrayscale()
 		{
-			CVImage^ gs = gcnew CVImage(RegionOfInterest.Width, RegionOfInterest.Height, Depth, 1);
+			CVImage^ gs = gcnew CVImage(Width, Height, Depth, 1);
+			System::Drawing::Rectangle prevRoi = this->RegionOfInterest;
+			this->ResetROI();
 			cvConvertImage(this->Internal, gs->Internal);
+			this->RegionOfInterest = prevRoi;
+			gs->RegionOfInterest = prevRoi;
+
 			return gs;
+		}
+
+		bool Contains(System::Drawing::Point pt)
+		{
+			System::Drawing::Rectangle rc(0, 0, Width, Height);
+			return (rc.Contains(pt));
 		}
 
 	private:

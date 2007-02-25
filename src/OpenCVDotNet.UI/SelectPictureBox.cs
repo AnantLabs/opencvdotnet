@@ -36,7 +36,7 @@ namespace OpenCVDotNet.UI
         /// <summary>
         /// Adds a cross marker to the picture box.
         /// </summary>
-        public CrossMarker AddMarker(CrossMarker cm)
+        public CrossMarker AddCrossMarker(CrossMarker cm)
         {
             markers.Add(cm);
             Invalidate();
@@ -46,12 +46,10 @@ namespace OpenCVDotNet.UI
         /// <summary>
         /// Adds a cross marker to the picture box.
         /// </summary>
-        public CrossMarker AddMarker(Point pt, Color col)
+        public CrossMarker AddCrossMarker(PointF pt, Color col)
         {
-            pt.X -= selectBox.Rect.Left;
-            pt.Y -= selectBox.Rect.Top;
             CrossMarker cm = new CrossMarker(pt, col);
-            return AddMarker(cm);
+            return AddCrossMarker(cm);
         }
 
         /// <summary>
@@ -172,6 +170,58 @@ namespace OpenCVDotNet.UI
                 Invalidate();
             }
         }
+
+        /// <summary>
+        /// Returns an enumartor for all the markers in the select box.
+        /// </summary>
+        public IEnumerable<CrossMarker> GetMarkers()
+        {
+            return markers;
+        }
+
+        /// <summary>
+        /// Returns all the marker locations.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Point> GetMarkerLocations()
+        {
+            return GetMarkerLocations(false, new Color());
+        }
+
+        /// <summary>
+        /// Returns the actual locations of the markers, based on a filter.
+        /// </summary>
+        public IEnumerable<Point> GetMarkerLocations(Color filter)
+        {
+            return GetMarkerLocations(true, filter);
+        }
+
+        /// <summary>
+        /// Returns an enumerator that enumerates all the marker's actual
+        /// locations, possibly filtering the list to return only one color.
+        /// </summary>
+        public IEnumerable<Point> GetMarkerLocations(bool useFilter, Color filter)
+        {
+            // iterate through all markers.
+            foreach (CrossMarker cm in markers)
+            {
+                // if filter is applied, skip over all markers not related to this filter.
+                if (useFilter && cm.Color != filter) continue;
+
+                // convert relative to actual location.
+                yield return GetMarkerLocation(cm.Location);
+            }
+        }
+
+        /// <summary>
+        /// Returns the actual marker location of a relative marker position.
+        /// </summary>
+        public Point GetMarkerLocation(PointF pt)
+        {
+            return new Point(
+                selectBox.Rect.Left + (int)(pt.X * (float) selectBox.Rect.Width),
+                selectBox.Rect.Top + (int)(pt.Y * (float) selectBox.Rect.Height));
+        }
     }
 
     /// <summary>
@@ -181,13 +231,13 @@ namespace OpenCVDotNet.UI
     {
         private const int CROSS_SIZE = 5;
 
-        private Point pt;
+        private PointF pt;
         private Pen pen;
 
         /// <summary>
         /// Creates a new cross marker.
         /// </summary>
-        public CrossMarker(Point pt, Pen pen)
+        public CrossMarker(PointF pt, Pen pen)
         {
             this.pt = pt;
             this.pen = pen;
@@ -196,7 +246,7 @@ namespace OpenCVDotNet.UI
         /// <summary>
         /// Creates a new cross marker.
         /// </summary>
-        public CrossMarker(Point pt, Color color)
+        public CrossMarker(PointF pt, Color color)
         {
             this.pt = pt;
             this.pen = new Pen(color);
@@ -208,16 +258,27 @@ namespace OpenCVDotNet.UI
         /// <param name="pe">Paint event argumjents</param>
         public void OnPaint(Rectangle selectionRect, PaintEventArgs pe)
         {
-            pe.Graphics.DrawLine(
-                pen,
-                selectionRect.Left + pt.X, selectionRect.Top + pt.Y - CROSS_SIZE,
-                selectionRect.Left + pt.X, selectionRect.Top + pt.Y + CROSS_SIZE);
+            int x = selectionRect.Left + (int) (pt.X * (float) selectionRect.Width);
+            int y = selectionRect.Top + (int) (pt.Y * (float) selectionRect.Height);
 
-            pe.Graphics.DrawLine(
-                pen,
-                selectionRect.Left + pt.X - CROSS_SIZE, selectionRect.Top + pt.Y,
-                selectionRect.Left + pt.X + CROSS_SIZE, selectionRect.Top + pt.Y);
+            pe.Graphics.DrawLine(pen, x, y - CROSS_SIZE, x, y + CROSS_SIZE);
+            pe.Graphics.DrawLine(pen, x - CROSS_SIZE, y, x + CROSS_SIZE, y);
         }
+
+        /// <summary>
+        /// Gets the color of the pen of this marker.
+        /// </summary>
+        public Color Color { get { return pen.Color; } }
+
+        /// <summary>
+        /// Gets the pen associated with this marker.
+        /// </summary>
+        public Pen Pen { get { return pen; } }
+
+        /// <summary>
+        /// Gets the relative of the marker (in float value).
+        /// </summary>
+        public PointF Location { get { return pt; } }
     }
 
     public abstract class SelectBoxHandle
