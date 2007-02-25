@@ -1,0 +1,40 @@
+------------------------------------------------------------------------
+r35 | elad.benisrael | 2007-02-11 11:44:19 +0200 (Ä, 11 îÅòÖÄò 2007) | 1 line
+
+Moved to version 0.6
+------------------------------------------------------------------------
+r36 | elad.benisrael | 2007-02-11 22:52:21 +0200 (Ä, 11 îÅòÖÄò 2007) | 14 lines
+
+OpenCVDotNet:
+ - Support loading images to CVCapture, so that videos and images can be treated alike.
+ - Support accessing the Area property of CVConnectedComp.
+ - Support ctor from Color and ToColor() method.
+
+OpenCVDotNet.Algorithms:
+ - Added Algorithms namespace (and DLL) to hold CV algorithms written in C# and shared by a few examples.
+ - RegionGrowing class implements 8-connected region growing algorithm.
+ - MaskedHistogram class supports calculating masked histograms.
+
+OpenCVDotNet.UI:
+Added ValueOverTime class which supports showing a values from various groups over time (in a graph) and collecting statistical information about it.
+
+
+------------------------------------------------------------------------
+r38 | elad.benisrael | 2007-02-11 22:55:45 +0200 (Ä, 11 îÅòÖÄò 2007) | 1 line
+
+Added solution for OpenCVDotNet.
+------------------------------------------------------------------------
+r39 | elad.benisrael | 2007-02-25 13:20:33 +0200 (Ä, 25 îÅòÖÄò 2007) | 11 lines
+
+OpenCVDotNet:
+ * Fix ToGrayscale() -- now region of interest is copied.
+ * Use Color as representation of RGB in RgbPixel.
+
+OpenCVDotNet.UI:
+ * SelectPictureBox now supports adding markers.
+
+Added OpenCVDotNet.Algorithms with C# written algorithms:
+ * Region growing
+ * Masked histogram
+
+------------------------------------------------------------------------

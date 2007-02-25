@@ -1,0 +1,154 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C2617B9B-3BD7-4B22-91C2-6DDA0DAFF323}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OpenCVDotNet.Examples</RootNamespace>
+    <AssemblyName>Examples</AssemblyName>
+    <StartupObject>OpenCVDotNet.Examples.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenCVDotNet, Version=1.0.2611.26923, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenCVDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCVDotNet.Algs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenCVDotNet.Algs.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCVDotNet.UI, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenCVDotNet.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RegionGrowing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegionGrowing.Designer.cs">
+      <DependentUpon>RegionGrowing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="History.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="History.Designer.cs">
+      <DependentUpon>History.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExampleSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExampleSelection.Designer.cs">
+      <DependentUpon>ExampleSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Histograms.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Histograms.Designer.cs">
+      <DependentUpon>Histograms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MeanShift.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MeanShift.Designer.cs">
+      <DependentUpon>MeanShift.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MovingAverage.cs" />
+    <Compile Include="Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Path.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Path.Designer.cs">
+      <DependentUpon>Path.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="MaskedHistogramTracker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MaskedHistogramTracker.Designer.cs">
+      <DependentUpon>MaskedHistogramTracker.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="History.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>History.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExampleSelection.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExampleSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Histograms.resx">
+      <DependentUpon>Histograms.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MeanShift.resx">
+      <DependentUpon>MeanShift.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options.resx">
+      <DependentUpon>Options.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Path.resx">
+      <DependentUpon>Path.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegionGrowing.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RegionGrowing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MaskedHistogramTracker.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MaskedHistogramTracker.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
