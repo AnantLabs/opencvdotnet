@@ -29,9 +29,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenCVDotNet, Version=1.0.2598.21483, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OpenCVDotNet, Version=1.0.2611.26923, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\src\OpenCVDotNet\Debug\OpenCVDotNet.dll</HintPath>
+      <HintPath>..\OpenCVDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCVDotNet.Algs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenCVDotNet.Algs.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCVDotNet.UI, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenCVDotNet.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -134,16 +142,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>MaskedHistogramTracker.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\src\OpenCVDotNet.Algorithms\OpenCVDotNet.Algorithms.csproj">
-      <Project>{00F243A0-FCC4-48AE-A219-62EB8D74EEC2}</Project>
-      <Name>OpenCVDotNet.Algorithms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\src\OpenCVDotNet.UI\OpenCVDotNet.UI.csproj">
-      <Project>{D7A04B8D-BC53-4210-8424-8EE5C79EF3C2}</Project>
-      <Name>OpenCVDotNet.UI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
