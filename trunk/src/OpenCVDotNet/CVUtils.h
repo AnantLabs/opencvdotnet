@@ -33,5 +33,10 @@ namespace OpenCVDotNet
 		{
 			cvRedirectError(ErrorHandler);
 		}
+
+		static Color ScalarToColor(CvScalar scalar)
+		{
+			return Color::FromArgb((int) scalar.val[2], (int) scalar.val[1], (int) scalar.val[0]);
+		}
 	};
 };

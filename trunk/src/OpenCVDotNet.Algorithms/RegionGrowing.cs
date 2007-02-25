@@ -56,6 +56,9 @@ namespace OpenCVDotNet.Algorithms
                         startPoint.X + (int)connection.X,
                         startPoint.Y + (int)connection.Y);
 
+                if (!outputImage.Contains(connectionPoint)) 
+                    continue;
+
                 // consider this point only if it's not already in the region.
                 if (outputImage[connectionPoint].GrayLevel != 0) continue;
 
@@ -75,6 +78,7 @@ namespace OpenCVDotNet.Algorithms
         /// </summary>
         public static void DefaultLabeling(CVImage outputImage, Point pt, object labelCookie)
         {
+            if (!outputImage.Contains(pt)) return;
             if (outputImage[pt].GrayLevel != 0) return;
             Color c = (Color)labelCookie;
             outputImage[pt] = new CVRgbPixel(c);
@@ -97,6 +101,7 @@ namespace OpenCVDotNet.Algorithms
         /// </summary>
         public static bool FloodFillCondition(CVImage frame, Point startPt, Point candidatePt, int tolerange)
         {
+            if (!frame.Contains(candidatePt) || !frame.Contains(startPt)) return false;
             return Math.Abs(frame[startPt].GrayLevel - frame[candidatePt].GrayLevel) <= tolerange;
         }
     }
