@@ -18,6 +18,54 @@ namespace OpenCVDotNet.Examples
         public MaskedHistogramTracker()
         {
             InitializeComponent();
+
+            int[,] template = 
+                {
+                    { -1,  0, -1,  0,  0, -1,  0,  0, -1,  0, -1 },
+                    { -1,  0, -1,  0,  0,  0,  0,  0, -1,  0, -1 },
+                    {  0, -1,  0,  0,  0, +1,  0,  0,  0, -1,  0 },
+                    { -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1 },
+                    { -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1 },
+                    {  0,  0,  0, +1,  0, +1,  0, +1,  0,  0,  0 },
+                    { -1,  0,  0,  0,  0, +1,  0,  0,  0,  0, -1 },
+                    {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                    { -1,  0,  0,  0,  0, +1,  0,  0,  0,  0, -1 },
+                    {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                    { -1, -1,  0,  0,  0,  0,  0,  0,  0, -1, -1 },
+                    { -1, -1,  0,  0,  0,  0,  0,  0,  0, -1, -1 },
+                    { -1, -1,  0,  0, +1,  0, +1,  0,  0, -1, -1 },
+                    { -1, -1,  0,  0,  0,  0,  0,  0,  0, -1, -1 },
+                    { -1, -1,  0,  0,  0,  0,  0,  0,  0, -1, -1 },
+                };
+
+            List<PointF> fg = new List<PointF>();
+            List<PointF> bg = new List<PointF>();
+
+            int rows = template.GetLength(0);
+            int cols = template.GetLength(1);
+
+            for (int row = 0; row < rows; ++row)
+            {
+                for (int col = 0; col < cols; ++col)
+                {
+                    float x = (float)col / ((float)cols - 1);
+                    float y = (float)row / ((float)rows - 1);
+
+                    PointF pt = new PointF(x, y);
+
+                    switch (template[row, col])
+                    {
+                        case 1: fg.Add(pt); break;
+                        case -1: bg.Add(pt); break;
+                        default: break;
+                    }
+                }
+            }
+
+            // update cross markers.
+            meanShift.ClearMarkers();
+            foreach (PointF pt in fg) meanShift.AddCrossMarker(pt, Color.Blue);
+            foreach (PointF pt in bg) meanShift.AddCrossMarker(pt, Color.Red);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -37,71 +85,36 @@ namespace OpenCVDotNet.Examples
 
         private void output_SelectionChanged(object sender, EventArgs e)
         {
-            CalculateHistograms();
+            CalculateMaskedHistogram();
         }
 
-        private void CalculateHistograms()
+        private void CalculateMaskedHistogram()
         {
             if (videoPlayer.LastFrame == null) return;
 
             using (CVImage frame = videoPlayer.LastFrame.CopyRegion(meanShift.SelectionRect))
             {
-                Rectangle region = frame.RegionOfInterest;
+                // create a list of real fg and bg markers.
+                List<Point> realFg = new List<Point>(meanShift.GetMarkerLocations(Color.Blue));
+                List<Point> realBg = new List<Point>(meanShift.GetMarkerLocations(Color.Red));
 
-                int quarterHeight = region.Height / 4;
-                int quarterWidth = region.Width / 4;
-
-                // forground
-                Point[] fg = 
-                { 
-                    new Point(region.Left + region.Width / 2, region.Top + quarterHeight),
-                    new Point(region.Left + region.Width / 2, region.Top + 2 * quarterHeight),
-                    new Point(region.Left + region.Width / 2, region.Top + 3 * quarterHeight),
-                    new Point(region.Left + (quarterWidth / 4) * 8, region.Top + 6 * quarterHeight / 2),
-                    new Point(region.Left + (quarterWidth / 4) * 9, region.Top + 6 * quarterHeight / 2),
-                    new Point(region.Left + (quarterWidth / 4) * 6, region.Top + 3 * quarterHeight / 2),
-                    new Point(region.Left + (quarterWidth / 4) * 10, region.Top + 3 * quarterHeight / 2),
-                };
-
-                // background
-                Point[] bg = 
+                // create the histogram mask.
+                using (CVImage mask = MaskedHistogram.PrepareMask(frame, realFg.ToArray(), realBg.ToArray(), includeNeautral.Checked, ffThresh.Value))
                 {
-                    new Point(region.Left + 2 * quarterWidth, region.Top),
-                    new Point(region.Left + quarterWidth / 2, region.Top + quarterHeight / 2),
-                    new Point(region.Left, region.Top + 4 * quarterHeight / 2),
-                    new Point(region.Left, region.Top + 5 * quarterHeight / 2),
-                    new Point(region.Left, region.Top + 6 * quarterHeight / 2),
-                    new Point(region.Left, region.Top + 7 * quarterHeight / 2),
-                    new Point(region.Left, region.Bottom),
-                    new Point(region.Right - quarterWidth / 2, region.Top + quarterHeight / 2),
-                    new Point(region.Right, region.Top + 4 * quarterHeight / 2),
-                    new Point(region.Right, region.Top + 5 * quarterHeight / 2),
-                    new Point(region.Right, region.Top + 6 * quarterHeight / 2),
-                    new Point(region.Right, region.Top + 7 * quarterHeight / 2),
-                    new Point(region.Right, region.Bottom),
-                };
+                    maskPicture.Image = mask.ToBitmap();
 
-                // update cross markers.
-                meanShift.ClearMarkers();
-                foreach (Point pt in fg) meanShift.AddMarker(pt, Color.Blue);
-                foreach (Point pt in bg) meanShift.AddMarker(pt, Color.Red);
+                    // show mask histogram to user interface.
+                    maskHistogram.BinsPerChannel = Bins;
+                    maskHistogram.ShowHistogram(frame, mask);
 
-                using (CVImage mask = MaskedHistogram.PrepareMask(frame, fg, bg, includeNeautral.Checked, ffThresh.Value))
-                {
-                    outputPic.Image = mask.ToBitmap();
+                    // calculate new histogram (dispose old one if exist).
+                    if (hist != null) hist.Dispose();
+                    hist = frame.CalcHistogram(Bins, mask);
 
-                    using (CVImage gsMask = mask.ToGrayscale())
-                    {
-                        maskHistogram.BinsPerChannel = Bins;
-                        maskHistogram.ShowHistogram(frame, gsMask);
-
-                        if (hist != null) hist.Dispose();
-                        hist = frame.CalcHistogram(Bins, gsMask);
-                    }
-
+                    // apply mask to overlay (just for ui).
                     using (CVImage masked = MaskedHistogram.ApplyMask(frame, mask))
                     {
-                        afterMask.Image = masked.ToBitmap();
+                        maskOverlay.Image = masked.ToBitmap();
                     }
                 }
             }
@@ -124,7 +137,7 @@ namespace OpenCVDotNet.Examples
             NextFrame(true);
         }
 
-        private const double MIN_AREA = 100000;
+        private const double MIN_AREA = 0;
         private const double MAX_AREA = 1200000;
 
         private void NextFrame(bool track)
@@ -136,7 +149,7 @@ namespace OpenCVDotNet.Examples
             if (hist == null) return;
             using (CVImage backProj = videoPlayer.LastFrame.CalcBackProject(hist))
             {
-                CVConnectedComp cc = backProj.MeanShift(meanShift.SelectionRect, 200);
+                CVConnectedComp cc = backProj.MeanShift(meanShift.SelectionRect, 1);
                 vot.AddValue(cc.Area, Color.Blue);
 
                 if (cc.Area > MIN_AREA && cc.Area < MAX_AREA)
@@ -157,7 +170,7 @@ namespace OpenCVDotNet.Examples
             if (histNoMask == null) return;
             using (CVImage backProjNoMask = videoPlayer.LastFrame.CalcBackProject(histNoMask))
             {
-                CVConnectedComp cc = backProjNoMask.MeanShift(meanShiftNoMask.SelectionRect, 200);
+                CVConnectedComp cc = backProjNoMask.MeanShift(meanShiftNoMask.SelectionRect, 1);
                 vot.AddValue(cc.Area, Color.Red);
 
                 if (cc.Area > MIN_AREA && cc.Area < MAX_AREA)
@@ -178,13 +191,13 @@ namespace OpenCVDotNet.Examples
 
         private void includeNeautral_CheckedChanged(object sender, EventArgs e)
         {
-            CalculateHistograms();
+            CalculateMaskedHistogram();
         }
 
         private void ffThresh_Scroll(object sender, EventArgs e)
         {
             thresholdLabel.Text = ffThresh.Value.ToString();
-            CalculateHistograms();
+            CalculateMaskedHistogram();
         }
 
         private void SmartHistograms_Load(object sender, EventArgs e)
@@ -217,7 +230,7 @@ namespace OpenCVDotNet.Examples
         private void histBins_Scroll(object sender, EventArgs e)
         {
             binsLabel.Text = histBins.Value.ToString();
-            CalculateHistograms();
+            CalculateMaskedHistogram();
         }
 
         private void resetStatsButton_Click(object sender, EventArgs e)
