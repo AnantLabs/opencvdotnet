@@ -29,7 +29,7 @@ namespace OpenCVDotNet.Examples
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MaskedHistogramTracker));
-            this.outputPic = new System.Windows.Forms.PictureBox();
+            this.maskPicture = new System.Windows.Forms.PictureBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.openButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripSeparator();
@@ -37,7 +37,7 @@ namespace OpenCVDotNet.Examples
             this.pauseButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.resetStatsButton = new System.Windows.Forms.ToolStripButton();
-            this.afterMask = new System.Windows.Forms.PictureBox();
+            this.maskOverlay = new System.Windows.Forms.PictureBox();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
@@ -66,9 +66,9 @@ namespace OpenCVDotNet.Examples
             this.ffThresh = new System.Windows.Forms.TrackBar();
             this.includeNeautral = new System.Windows.Forms.CheckBox();
             this.videoPlayer = new OpenCVDotNet.UI.VideoPlayer();
-            ((System.ComponentModel.ISupportInitialize)(this.outputPic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maskPicture)).BeginInit();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.afterMask)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maskOverlay)).BeginInit();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -86,16 +86,16 @@ namespace OpenCVDotNet.Examples
             ((System.ComponentModel.ISupportInitialize)(this.ffThresh)).BeginInit();
             this.SuspendLayout();
             // 
-            // outputPic
+            // maskPicture
             // 
-            this.outputPic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.outputPic.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.outputPic.Location = new System.Drawing.Point(11, 14);
-            this.outputPic.Name = "outputPic";
-            this.outputPic.Size = new System.Drawing.Size(171, 138);
-            this.outputPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.outputPic.TabIndex = 4;
-            this.outputPic.TabStop = false;
+            this.maskPicture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.maskPicture.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.maskPicture.Location = new System.Drawing.Point(11, 14);
+            this.maskPicture.Name = "maskPicture";
+            this.maskPicture.Size = new System.Drawing.Size(171, 138);
+            this.maskPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.maskPicture.TabIndex = 4;
+            this.maskPicture.TabStop = false;
             // 
             // toolStrip1
             // 
@@ -163,16 +163,16 @@ namespace OpenCVDotNet.Examples
             this.resetStatsButton.Text = "Reset Statistics";
             this.resetStatsButton.Click += new System.EventHandler(this.resetStatsButton_Click);
             // 
-            // afterMask
+            // maskOverlay
             // 
-            this.afterMask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.afterMask.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.afterMask.Location = new System.Drawing.Point(11, 158);
-            this.afterMask.Name = "afterMask";
-            this.afterMask.Size = new System.Drawing.Size(171, 138);
-            this.afterMask.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.afterMask.TabIndex = 6;
-            this.afterMask.TabStop = false;
+            this.maskOverlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.maskOverlay.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.maskOverlay.Location = new System.Drawing.Point(11, 158);
+            this.maskOverlay.Name = "maskOverlay";
+            this.maskOverlay.Size = new System.Drawing.Size(171, 138);
+            this.maskOverlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.maskOverlay.TabIndex = 6;
+            this.maskOverlay.TabStop = false;
             // 
             // toolStripContainer1
             // 
@@ -336,8 +336,8 @@ namespace OpenCVDotNet.Examples
             this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.ffThresh);
             this.panel3.Controls.Add(this.includeNeautral);
-            this.panel3.Controls.Add(this.outputPic);
-            this.panel3.Controls.Add(this.afterMask);
+            this.panel3.Controls.Add(this.maskPicture);
+            this.panel3.Controls.Add(this.maskOverlay);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel3.Location = new System.Drawing.Point(480, 0);
             this.panel3.Name = "panel3";
@@ -446,7 +446,7 @@ namespace OpenCVDotNet.Examples
             this.histBins.Name = "histBins";
             this.histBins.Size = new System.Drawing.Size(152, 45);
             this.histBins.TabIndex = 11;
-            this.histBins.Value = 10;
+            this.histBins.Value = 30;
             this.histBins.Scroll += new System.EventHandler(this.histBins_Scroll);
             // 
             // thresholdLabel
@@ -504,10 +504,10 @@ namespace OpenCVDotNet.Examples
             this.Name = "MaskedHistogramTracker";
             this.Text = "Masked Histogram Tracker";
             this.Load += new System.EventHandler(this.SmartHistograms_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.outputPic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maskPicture)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.afterMask)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maskOverlay)).EndInit();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();
@@ -535,11 +535,11 @@ namespace OpenCVDotNet.Examples
 
         private OpenCVDotNet.UI.SelectPictureBox meanShift;
         private OpenCVDotNet.UI.ColorHistogram maskHistogram;
-        private System.Windows.Forms.PictureBox outputPic;
+        private System.Windows.Forms.PictureBox maskPicture;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton playButton;
         private System.Windows.Forms.ToolStripButton pauseButton;
-        private System.Windows.Forms.PictureBox afterMask;
+        private System.Windows.Forms.PictureBox maskOverlay;
         private OpenCVDotNet.UI.ColorHistogram noMaskHist;
         private OpenCVDotNet.UI.VideoPlayer videoPlayer;
         private OpenCVDotNet.UI.SelectPictureBox meanShiftNoMask;

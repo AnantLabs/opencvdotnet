@@ -86,6 +86,7 @@ Section -Main SEC0000
     SetOverwrite on
     File ..\OpenCVDotNet.dll
     File ..\OpenCVDotNet.UI.dll
+	File ..\OpenCVDotNet.Algs.dll
 
     SetOutPath $INSTDIR
     SetOverwrite on
