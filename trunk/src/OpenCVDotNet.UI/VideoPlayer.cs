@@ -71,8 +71,6 @@ namespace OpenCVDotNet.UI
             videoTimer.Enabled = false;
             capture = newCapture;
             videoTimer.Interval = 1000 / capture.FramesPerSecond;
-
-            HandleNextFrame();
         }
 
         /// <summary>
@@ -91,6 +89,14 @@ namespace OpenCVDotNet.UI
             }
 
             videoTimer.Enabled = true;
+        }
+
+        /// <summary>
+        /// Moves to the next frame of the video stream.
+        /// </summary>
+        public void Step()
+        {
+            HandleNextFrame();
         }
 
         /// <summary>
@@ -199,18 +205,48 @@ namespace OpenCVDotNet.UI
             }
         }
 
+        /// <summary>
+        /// Creates a compatible video player with the default codec.
+        /// </summary>
+        /// <param name="filename">The output file name</param>
+        /// <returns></returns>
+        public CVVideoWriter CreateVideoWriter(string filename)
+        {
+            return CreateVideoWriter(filename, CVCodec.Mpeg4_2);
+        }
+
+        /// <summary>
+        /// Creates a CVVideoWriter compatible with this video.
+        /// </summary>
+        /// <param name="filename">The file name of the output video</param>
+        /// <param name="codec">The codec to use</param>
+        /// <returns>A CVVideoWriter object</returns>
+        public CVVideoWriter CreateVideoWriter(string filename, CVCodec codec)
+        {
+            return new CVVideoWriter(filename, codec, Capture.Width, Capture.Height);
+        }
+
+        /// <summary>
+        /// Called when the timer ticks.
+        /// </summary>
         private void videoTimer_Tick(object sender, EventArgs e)
         {
             HandleNextFrame();
         }
     }
 
+    /// <summary>
+    /// Arguments passed to the next frame handler.
+    /// </summary>
     public class NextFrameEventArgs : EventArgs
     {
         public CVImage Frame;
         public CVCapture Capture;
     }
 
+    /// <summary>
+    /// Arguments passed to the Opening event handler.
+    /// </summary>
     public class OpeningEventArgs : EventArgs
     {
         public CVCapture CurrentCapture;
