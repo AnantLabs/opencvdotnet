@@ -4,17 +4,18 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D7A04B8D-BC53-4210-8424-8EE5C79EF3C2}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{02B0C871-4173-4C91-BA71-62389D89ED11}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenCVDotNet.UI</RootNamespace>
-    <AssemblyName>OpenCVDotNet.UI</AssemblyName>
+    <RootNamespace>NegativeSample</RootNamespace>
+    <AssemblyName>Example1</AssemblyName>
+    <StartupObject>NegativeSample.Negative</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -22,55 +23,38 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenCVDotNet, Version=1.0.2615.24333, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OpenCVDotNet, Version=1.0.2611.26923, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\OpenCVDotNet.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\OpenCVDotNet\OpenCVDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCVDotNet.UI, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\OpenCVDotNet\OpenCVDotNet.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorHistogram.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Negative.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ColorHistogram.Designer.cs">
-      <DependentUpon>ColorHistogram.cs</DependentUpon>
+    <Compile Include="Negative.Designer.cs">
+      <DependentUpon>Negative.cs</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SelectPictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="SelectPictureBox.Designer.cs">
-      <DependentUpon>SelectPictureBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ValueOverTime.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ValueOverTime.Designer.cs">
-      <DependentUpon>ValueOverTime.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VideoPlayer.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <EmbeddedResource Include="Negative.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Negative.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ColorHistogram.resx">
-      <DependentUpon>ColorHistogram.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ValueOverTime.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ValueOverTime.cs</DependentUpon>
-    </EmbeddedResource>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
