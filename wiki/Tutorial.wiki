@@ -4,7 +4,7 @@
 
 We'll create a simple C# project that uses OpenCVDotNet to perform a simple image-wise operation on a video (AVI) file (show only the red color channel instead of all three color channels).
 
-You will first need to [Install] OpenCVDotNet.
+You will first need to [Install] OpenCVDotNet (and all needed components).
 
 == Creating the Project ==
 
