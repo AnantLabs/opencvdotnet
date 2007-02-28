@@ -10,6 +10,8 @@ If all you want is to play around with the binary version of OpenCVDotNet (write
 
  # Download & install the latest version of [http://code.google.com/p/opencvdotnet/downloads/list OpenCVDotNet].
 
-After installation, binaries and source code will be installed to {{{C:\Program Files\OpenCVDotNet}}}. In the Start Menu, you can open "OpenCVDotNet Examples", which will open up Visual C# Express with the examples solution.
+After installation, binaries and source code will be installed to {{{C:\Program Files\OpenCVDotNet}}}. 
+
+You can install example code if you wish to try things out...
 
 Press CTRL+F5 to build and run the examples program.
