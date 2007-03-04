@@ -14,5 +14,13 @@ namespace OpenCVDotNet
 		{
 			CvArr* get() = 0;
 		}
+
+		virtual property System::IntPtr Ptr
+		{
+			System::IntPtr get()
+			{
+				return System::IntPtr(Array);
+			}
+		}
 	};
 }
