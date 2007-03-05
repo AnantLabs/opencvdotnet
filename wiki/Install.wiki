@@ -6,7 +6,7 @@ If all you want is to play around with the binary version of OpenCVDotNet (write
 
  # Download and install [http://sourceforge.net/project/showfiles.php?group_id=22870&package_id=16937 OpenCV]. Make sure to install OpenCV to {{{C:\Program Files\OpenCV}}}, or otherwise OpenCVDotNet DLLs will not be able to find it.
 
- # Download and install [http://msdn.microsoft.com/vstudio/express/visualcsharp/download/ Visual C# Express]
+ # Download and install [http://msdn.microsoft.com/vstudio/express/visualcsharp/download/ Visual C# Express].
 
  # Download & install the latest version of [http://code.google.com/p/opencvdotnet/downloads/list OpenCVDotNet].
 
@@ -15,3 +15,5 @@ After installation, binaries and source code will be installed to {{{C:\Program 
 You can install example code if you wish to try things out...
 
 Press CTRL+F5 to build and run the examples program.
+
+_If you receive a FileNotFoundException with HRESULT 0x8007007E) after you execute your program, see [http://code.google.com/p/opencvdotnet/issues/detail?id=1 this issue] for possible solutions._
