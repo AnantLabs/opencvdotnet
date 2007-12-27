@@ -52,7 +52,7 @@ namespace OpenCVDotNet
 
             CV_BGRA2RGBA = 5,
             CV_RGBA2BGRA = CV_BGRA2RGBA,
-
+            
             CV_BGR2GRAY = 6,
             CV_RGB2GRAY = 7,
             CV_GRAY2BGR = 8,
@@ -304,7 +304,8 @@ namespace OpenCVDotNet
         /// </summary>
         public static CVImage ConvertColorSpace(CVImage image, ColorSpace colorSpace)
         {
-            CVImage dst = new CVImage(image.Width, image.Height, image.Depth, 3);
+            int numberOfChannels = (colorSpace.ToString().EndsWith("GRAY") ? 1 : 3);
+            CVImage dst = new CVImage(image.Width, image.Height, image.Depth, numberOfChannels);
             PInvoke.cvCvtColor(new __CvArrPtr(image), new __CvArrPtr(dst), (int)colorSpace);
             return dst;
         }
