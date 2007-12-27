@@ -9,7 +9,9 @@ namespace OpenCVDotNet
     internal struct __CvScalar { public double v0, v1, v2, v3; public __CvScalar(double[] val) { v0 = val[0]; v1 = val[1]; v2 = val[2]; v3 = val[3]; } public __CvScalar(CVScalar scalar) { v0 = scalar.val[0]; v1 = scalar.val[1]; v2 = scalar.val[2]; v3 = scalar.val[3]; } }
     internal struct __CvMemStoragePtr { public IntPtr ptr; public __CvMemStoragePtr(IntPtr ptr) { this.ptr = ptr; } }
     internal struct __CvSeqPtr { public IntPtr ptr; public __CvSeqPtr(IntPtr ptr) { this.ptr = ptr; } }
-    internal struct __CvArrPtr { public IntPtr ptr; public __CvArrPtr(CVArr arr) { ptr = arr.Ptr; } }
+    internal struct __CvArrPtr { public IntPtr ptr; public __CvArrPtr(CVArr arr) { 
+        ptr = (arr != null? arr.Ptr : IntPtr.Zero); } 
+    }
     internal struct __CvImagePtr { public IntPtr ptr; public __CvImagePtr(CVImage img) { ptr = img.Ptr; } }
     internal struct __CvMatPtr { public IntPtr ptr; public __CvMatPtr(CVMat mat) { ptr = mat.Ptr; } }
     internal struct __CvPoint2D32f { }
@@ -17,6 +19,8 @@ namespace OpenCVDotNet
     internal struct __IplConvKernelPtr { public IntPtr ptr; }
     internal struct __CvMomentsPtr { public IntPtr ptr; }
     internal struct __CvHuMomentsPtr { public IntPtr ptr; }
+    
+    
     internal sealed class PInvoke
     {
         [DllImport("cv100.dll")]
@@ -105,5 +109,15 @@ namespace OpenCVDotNet
 
         [DllImport("cv100.dll")]
         internal static extern void cvGetHuMoments(__CvMomentsPtr moments, __CvHuMomentsPtr hu_moments);
+
+        [DllImport("cv100.dll")]
+        internal static extern void cvMatchTemplate(__CvArrPtr image, __CvArrPtr templ, __CvArrPtr result, int method);
+        
+        [DllImport("cv100.dll")]
+        internal static extern void cvCanny(__CvArrPtr image, __CvArrPtr dst, double threshold1, double threshold2, int apertureSize);
+        
+        [DllImport("cxcore100.dll")]
+        internal static extern void cvMinMaxLoc(__CvArrPtr arr, ref double min_val, ref double max_val, ref __CvPoint min_loc, ref __CvPoint max_loc, __CvArrPtr mask);
+
     }
 }

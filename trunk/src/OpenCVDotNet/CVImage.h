@@ -1,5 +1,5 @@
 /**
- * (C) 2007 Elad Ben-Israel
+ * (C) 2007 Elad Ben-Israel and OpenCVDotNet contributors
  * This code is licenced under the GPL.
  */
 
@@ -85,9 +85,11 @@ namespace OpenCVDotNet
 		}
 	};
 
+
+
 	public ref class CVImage : public CVArr, public IDisposable
 	{
-	private:
+	internal:
 		IplImage* image;
 		bool created;
 
@@ -104,32 +106,76 @@ namespace OpenCVDotNet
 			cvConvertImage(clone->Internal, this->image, clone->Internal->origin == 1 ? CV_CVTIMG_FLIP : 0);
 		}
 
+		CVImage(System::Drawing::Bitmap^ sourceImage) 
+        { 
+            System::Drawing::Rectangle rect ; 
+            rect.X = 0 ; 
+            rect.Y = 0 ; 
+            rect.Width = sourceImage->Width; 
+            rect.Height = sourceImage->Height; 
+
+            System::Drawing::Imaging::BitmapData^ bData = 
+                    sourceImage->LockBits(rect, 
+                    System::Drawing::Imaging::ImageLockMode::ReadWrite, 
+                    sourceImage->PixelFormat); 
+
+            IplImage* tempImage = cvCreateImageHeader(cvSize(sourceImage->Width, sourceImage->Height), 8, Bitmap::GetPixelFormatSize(sourceImage->PixelFormat)/8);                 
+            tempImage->imageData = (char *)bData->Scan0.ToPointer(); 
+
+            IplImage *dst[4]; 
+            for(int i = 0 ; i < 4 ; i ++ ) 
+                    dst[i] = NULL; 
+            for(int i = 0 ; i < tempImage->nChannels ; i ++ ) 
+                    dst[i] = cvCreateImage(cvSize(sourceImage->Width, sourceImage->Height), 8, 1); 
+
+            cvSplit(tempImage, dst[0], dst[1], dst[2], dst[3]); 
+            image = cvCreateImage(cvSize(sourceImage->Width, sourceImage->Height), 8, 3); 
+            cvMerge(dst[0], dst[1], dst[2], NULL, image) ; 
+
+            for(int i = 0 ; i < tempImage->nChannels ; i ++ ) 
+                    cvReleaseImage(dst + i); 
+
+            created = true; 
+            sourceImage->UnlockBits(bData); 
+        } 
+
+
+
+		
 		CVImage(int width, int height, CVDepth depth, int channels)
 		{
 			Create(width, height, depth, channels);
 		}
 
+		
 		CVImage(String^ filename)
 		{
+			if (!System::IO::File::Exists(filename)) {
+				throw gcnew System::IO::FileNotFoundException(filename);
+			}
 			LoadImage(filename, true);
 		}
 
+		
 		CVImage(String^ filename, bool isColor)
 		{
 			LoadImage(filename, isColor);
 		}
 
+		
 		CVImage(array<CVImage^>^ bgrChannels)
 		{
 			Create(bgrChannels[0]->Width, bgrChannels[0]->Height, bgrChannels[0]->Depth, 3);
 			this->Merge(bgrChannels);
 		}
 
+		
 		virtual ~CVImage()
 		{
 			Release();
 		}
 
+		
 		void LoadImage(String^ filename, bool isColor)
 		{
 			Release();
@@ -140,6 +186,7 @@ namespace OpenCVDotNet
 			created = true;
 		}
 
+		
 		void Release()
 		{
 			if (!created) return;
@@ -148,6 +195,7 @@ namespace OpenCVDotNet
 			cvReleaseImage(&ptr);
 		}
 
+		
 		property CVRgbPixel^ default[System::Drawing::Point]
 		{
 			CVRgbPixel^ get(System::Drawing::Point pt)
@@ -155,6 +203,7 @@ namespace OpenCVDotNet
 				return this[pt.Y, pt.X];
 			}
 
+			
 			void set(System::Drawing::Point pt, CVRgbPixel^ val)
 			{
 				this[pt.Y, pt.X] = val;
@@ -174,6 +223,7 @@ namespace OpenCVDotNet
 			return pixelPtr;
 		}
 
+		
 		property CVRgbPixel^ default[int, int]
 		{
 			CVRgbPixel^ get(int row, int col)
@@ -194,6 +244,7 @@ namespace OpenCVDotNet
 				}
 			}
 
+			
 			void set(int row, int col, CVRgbPixel^ value)
 			{
 				char* pixel = GetPixelPtr(row, col);
@@ -223,6 +274,7 @@ namespace OpenCVDotNet
 			}
 		}
 
+		
 		property int Height
 		{
 			int get()
@@ -231,6 +283,7 @@ namespace OpenCVDotNet
 			}
 		}
 
+		
 		property int Channels
 		{
 			int get()
@@ -239,6 +292,7 @@ namespace OpenCVDotNet
 			}
 		}
 
+		
 		property CVDepth Depth
 		{
 			CVDepth get()
@@ -247,6 +301,7 @@ namespace OpenCVDotNet
 			}
 		}
 
+		
 		virtual property CvArr* Array
 		{
 			CvArr* get() override
@@ -256,6 +311,7 @@ namespace OpenCVDotNet
 			}
 		}
 
+		
 		virtual property IplImage* Internal
 		{
 			IplImage* get()
