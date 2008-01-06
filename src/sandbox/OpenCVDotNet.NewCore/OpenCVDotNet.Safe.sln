@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C# Express 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCVDotNet.NewCore", "OpenCVDotNet.NewCore.csproj", "{02D0C71C-CB7A-4B37-8E74-227E6E0E6B65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewCore.MiniTest", "..\MiniTest\NewCore.MiniTest.csproj", "{4A87A1CB-F5C7-4D79-9B07-C5D6754BF2C1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{02D0C71C-CB7A-4B37-8E74-227E6E0E6B65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02D0C71C-CB7A-4B37-8E74-227E6E0E6B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02D0C71C-CB7A-4B37-8E74-227E6E0E6B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02D0C71C-CB7A-4B37-8E74-227E6E0E6B65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A87A1CB-F5C7-4D79-9B07-C5D6754BF2C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A87A1CB-F5C7-4D79-9B07-C5D6754BF2C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A87A1CB-F5C7-4D79-9B07-C5D6754BF2C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A87A1CB-F5C7-4D79-9B07-C5D6754BF2C1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
