@@ -14,6 +14,8 @@ namespace Test
             CVImage image = new CVImage(@"C:\Users\Yoav HaCohen\Pictures\temp\hair_res.bmp");
             CVHistogram h = image.CalcHistogram(255);
             MessageBox.Show("Done");
+            MessageBox.Show("!!! " + h.MinMaxValue);
+            
         }
     }
 }
