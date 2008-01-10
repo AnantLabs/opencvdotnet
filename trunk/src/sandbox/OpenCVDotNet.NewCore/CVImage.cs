@@ -575,7 +575,7 @@ namespace OpenCVDotNet
 		{
             get
 			{
-                System.Windows.Forms.MessageBox.Show("::" + Internal.ptr);
+                System.Windows.Forms.MessageBox.Show("::1:" + Internal.ptr);
 				__CvRect rc = PInvoke.cvGetImageROI(Internal.ptr);
                 System.Windows.Forms.MessageBox.Show("::2:" + Internal.ptr); 
                 return new System.Drawing.Rectangle(rc.x, rc.y, rc.width, rc.height);

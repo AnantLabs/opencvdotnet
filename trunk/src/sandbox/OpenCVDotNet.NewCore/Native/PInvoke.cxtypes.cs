@@ -8,7 +8,7 @@ namespace OpenCVDotNet
     
     internal static partial class PInvoke
     {
-        [DllImport("cxts001.dll")]
+        [DllImport("cxts001.dll", CallingConvention=CallingConvention.Cdecl)]
         internal static unsafe extern __CvTermCriteria cvTermCriteria(int type, int max_iter, double epsilon);
 
         internal static __CvRect cvRect(int x, int y, int width, int height)

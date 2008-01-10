@@ -317,7 +317,7 @@ namespace OpenCVDotNet
     internal unsafe struct __CvHistogram
     {
         public int type;
-        public __CvArr* bins;
+        public __CvArrPtr bins;
 
         //[MarshalAsAttribute(UnmanagedType.LPArray, SizeConst = 64)] // Maybe this one?
         //[MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = (int)CVGlobalConsts.CV_MAX_DIM * 2)] // Or maybe this one?

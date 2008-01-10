@@ -39,8 +39,15 @@ namespace OpenCVDotNet
 		    get
 			{
                 float min_value = 0, max_value = 0;
-                PInvoke.cvGetMinMaxHistValue(this.Internal, ref min_value, ref max_value);
-                return new CVPair(min_value, max_value);
+                // TODO: Use the P/Invoke call
+                //PInvoke.cvGetMinMaxHistValue(this.Internal, ref min_value, ref max_value);
+                int min_idx = 0, max_idx = 0;
+                for (int i = 0; i < 256; ++i)
+                {
+                    if (min_value > this[i]) min_value = (float)this[i];
+                    if (max_value < this[i]) max_value = (float)this[i];
+                }
+                return new CVPair((float)min_value, (float)max_value);
 			}
 		}
 
