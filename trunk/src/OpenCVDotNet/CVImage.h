@@ -33,6 +33,7 @@ namespace OpenCVDotNet
 		Depth8S = IPL_DEPTH_8S,
 		Depth16S = IPL_DEPTH_16S,
 		Depth32S = IPL_DEPTH_32S,
+		Depth64F = IPL_DEPTH_64F,
 	};
 
 	public ref class CVConnectedComp
@@ -543,6 +544,7 @@ namespace OpenCVDotNet
 			}
 		}
 
+		
 		property System::Drawing::Rectangle RegionOfInterest
 		{
 			void set(System::Drawing::Rectangle rect)
