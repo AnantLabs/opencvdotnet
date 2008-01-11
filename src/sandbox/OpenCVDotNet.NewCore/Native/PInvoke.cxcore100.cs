@@ -218,7 +218,7 @@ namespace OpenCVDotNet
             //return (float)cvGetReal1D(hist->bins, idx0);
         }
 
-        public unsafe delegate int __CvErrorCallback(
+        public delegate int __CvErrorCallback(
             int status,
             [MarshalAs(UnmanagedType.LPStr)]string func_name,
             [MarshalAs(UnmanagedType.LPStr)]string err_msg,

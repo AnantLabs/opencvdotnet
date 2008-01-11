@@ -14,7 +14,8 @@ namespace OpenCVDotNet
         /// <param name="str"></param>
         /// <param name="output"></param>
         /// <param name="size"></param>
-        unsafe static void StringToCharPointer(String str, char* output, int size)
+        [Obsolete("Use MarshalAsAttribute instead")]
+        unsafe static void StringToCharPointer(string str, char* output, int size)
         {
             //unsafe
             //{
@@ -30,15 +31,16 @@ namespace OpenCVDotNet
             return (int)Math.Round(val);
 		}
 
-        static unsafe int ErrorHandler(int status, [MarshalAs(UnmanagedType.LPStr)]string func_name, [MarshalAs(UnmanagedType.LPStr)]string err_msg, [MarshalAs(UnmanagedType.LPStr)]string file_name, int line, [MarshalAs(UnmanagedType.LPStr)]string userdata)
+        static int ErrorHandler(int status, [MarshalAs(UnmanagedType.LPStr)]string func_name, [MarshalAs(UnmanagedType.LPStr)]string err_msg, [MarshalAs(UnmanagedType.LPStr)]string file_name, int line, [MarshalAs(UnmanagedType.LPStr)]string userdata)
 	    {
-            unsafe
-            {
-                throw new CVException(err_msg);
-            }
+            throw new CVException(err_msg);
+            //unsafe
+            //{
+            //    throw new CVException(err_msg);
+            //}
 	    }
 
-        private unsafe static PInvoke.__CvErrorCallback _errHandler = ErrorHandler;
+        private static PInvoke.__CvErrorCallback _errHandler = ErrorHandler;
 
         public static void ErrorsToExceptions()
         {
