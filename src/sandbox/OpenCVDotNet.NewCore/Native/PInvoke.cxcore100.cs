@@ -272,9 +272,28 @@ namespace OpenCVDotNet
         [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static unsafe extern void* cvRedirectError();
 
+        /// <summary>
+        /// Initializes CvMat header
+        /// </summary>
+        /// <param name="mat"></param>
+        /// <param name="rows"></param>
+        /// <param name="cols"></param>
+        /// <param name="type"></param>
+        /// <param name="data"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
+        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static unsafe extern __CvMatPtr cvInitMatHeader( __CvMatPtr mat, int rows, int cols, int type, IntPtr data, int step);
 
-        //typedef int (CV_CDECL *CvErrorCallback)( int status, const char* func_name,
-        //            const char* err_msg, const char* file_name, int line, void* userdata );
+        /// <summary>
+        /// Allocates and initializes CvMat header and allocates data
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="cols"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern __CvMatPtr cvCreateMat( int rows, int cols, int type );
 
     }
 }

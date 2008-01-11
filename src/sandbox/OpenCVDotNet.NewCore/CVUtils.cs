@@ -32,21 +32,22 @@ namespace OpenCVDotNet
 		}
 
         static int ErrorHandler(int status, [MarshalAs(UnmanagedType.LPStr)]string func_name, [MarshalAs(UnmanagedType.LPStr)]string err_msg, [MarshalAs(UnmanagedType.LPStr)]string file_name, int line, [MarshalAs(UnmanagedType.LPStr)]string userdata)
-	    {
+        {
             throw new CVException(err_msg);
-            //unsafe
-            //{
-            //    throw new CVException(err_msg);
-            //}
-	    }
+        }
+        
+        //static unsafe int ErrorHandler(int status, byte* func_name, byte* err_msg, byte* file_name, int line, byte* userdata)
+        //{
+        //    throw new CVException(new String((char*) err_msg));
+        //}
 
-        private static PInvoke.__CvErrorCallback _errHandler = ErrorHandler;
+        private unsafe static PInvoke.__CvErrorCallback _errHandler = ErrorHandler;
 
         public static void ErrorsToExceptions()
         {
             unsafe
             {
-                PInvoke.cvRedirectError(_errHandler);
+                //PInvoke.cvRedirectError(_errHandler);
             }
         }
 

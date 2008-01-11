@@ -8,7 +8,8 @@ namespace OpenCVDotNet
     
     internal static partial class PInvoke
     {
-        private const string CV100_DLL = @"C:\dev\personal\OpenCV\opencv\bin\cv100d.dll";
+        private const string CV100_DLL = @"cv100.dll";
+        //private const string CV100_DLL = @"C:\dev\personal\OpenCV\opencv\bin\cv100d.dll";
 
         #region CV100_DLL
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -107,10 +108,12 @@ namespace OpenCVDotNet
         #region Histogram
 
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern void cvCalcArrHist(__CvArrPtr[] image, IntPtr dst, int accumulate, __CvArrPtr mask);
+        internal static extern void cvCalcArrHist(__CvArrPtr[] image, IntPtr dst, int accumulate, __CvArrPtr mask);
 
-        [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern void cvCalcArrHist(__CvArrPtr[] image, IntPtr dst, int accumulate);
+        internal static void cvCalcArrHist(__CvArrPtr[] image, IntPtr dst, int accumulate)
+        {
+            cvCalcArrHist(image, dst, accumulate, IntPtr.Zero);
+        }
 
         internal static unsafe void cvCalcHist(__IplImagePtr[] image, IntPtr hist, int accumulate, __CvArrPtr mask)
         {
@@ -184,19 +187,12 @@ namespace OpenCVDotNet
         /// <param name="box"></param>
         /// <returns></returns>
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int cvCamShift(__CvArrPtr prob, __CvRect window, __CvTermCriteria criteria, ref __CvConnectedComp comp, __CvBox2D box);
+        internal static extern int cvCamShift(__CvArrPtr prob, __CvRect window, __CvTermCriteria criteria, ref __CvConnectedComp comp, /*__CvBox2D*/ IntPtr box);
 
-        /// <summary>
-        /// Implements CAMSHIFT algorithm - determines object position, size and orientation
-        /// from the object histogram back project (extension of meanshift)
-        /// </summary>
-        /// <param name="prob"></param>
-        /// <param name="window"></param>
-        /// <param name="criteria"></param>
-        /// <param name="comp"></param>
-        /// <returns></returns>
-        [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int cvCamShift(__CvArrPtr prob, __CvRect window, __CvTermCriteria criteria, ref __CvConnectedComp comp);
+        internal static int cvCamShift(__CvArrPtr prob, __CvRect window, __CvTermCriteria criteria, ref __CvConnectedComp comp)
+        {
+            return cvCamShift(prob, window, criteria, ref comp, IntPtr.Zero);
+        }
 
         /// <summary>
         /// Releases histogram
@@ -327,18 +323,6 @@ namespace OpenCVDotNet
         //    return pointersToArrays;
         //}
 
-        /// <summary>
-        /// Creates new histogram
-        /// </summary>
-        /// <param name="dims"></param>
-        /// <param name="sizes"></param>
-        /// <param name="type"></param>
-        /// <param name="ranges"></param>
-        /// <param name="uniform"></param>
-        /// <returns></returns>
-        [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr cvCreateHist(int dims, int[] sizes, int type, IntPtr[] ranges, int uniform);
-
         ////internal static unsafe extern IntPtr cvCreateHist(int dims, int* sizes, int type, [MarshalAs(UnmanagedType.LPArray)] float[][] ranges, int uniform);
 
         ///// <summary>
@@ -352,15 +336,23 @@ namespace OpenCVDotNet
         //[DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
         //internal static unsafe extern IntPtr cvCreateHist(int dims, int* sizes, int type, float** ranges);
 
+
         /// <summary>
         /// Creates new histogram
         /// </summary>
         /// <param name="dims"></param>
         /// <param name="sizes"></param>
         /// <param name="type"></param>
+        /// <param name="ranges"></param>
+        /// <param name="uniform"></param>
         /// <returns></returns>
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern IntPtr cvCreateHist(int dims, int* sizes, int type);
+        private static extern IntPtr cvCreateHist(int dims, int[] sizes, int type, IntPtr[] ranges, int uniform);
+
+        internal static unsafe IntPtr cvCreateHist(int[] dims, int type)
+        {
+            return cvCreateHist(dims, type, null, true);
+        }
         #endregion
         #endregion
 
