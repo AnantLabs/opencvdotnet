@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Text;
 
 namespace OpenCVDotNet
@@ -501,27 +502,114 @@ namespace OpenCVDotNet
 		}
 
 
+        [System.Runtime.InteropServices.DllImport("gdi32.dll", SetLastError = true)]
+        private static extern IntPtr CreateCompatibleDC(IntPtr dc);
 
         public System.Drawing.Bitmap ToBitmap()
 		{
-            throw new NotImplementedException();
-            //SIZE size = { 0, 0 };
+            
+            #region Initialize Bitmap And Pixel Format
+            PixelFormat pixelFormat;
+            if (this.Depth == CVDepth.Depth8U)
+            {
+                switch (this.Channels)
+                {
+                    case 1:
+                        pixelFormat = PixelFormat.Format8bppIndexed;
+                        break;
+                    case 3:
+                        pixelFormat = PixelFormat.Format24bppRgb;
+                        break;
+                    case 4:
+                        pixelFormat = PixelFormat.Format32bppArgb;
+                        break;
+                    default:
+                        throw new NotImplementedException("Format is not supported.");
+                }
+            }
+            else
+            {
+                throw new NotImplementedException("Format is not supported.");
+            }
+            Bitmap result = new Bitmap(this.Width, this.Height, pixelFormat);
+            #endregion
+
+            BitmapData resultData = result.LockBits(new Rectangle(Point.Empty, new Size(this.Width, this.Height)), ImageLockMode.WriteOnly, pixelFormat);
+            unsafe
+            {
+                byte* pWrite = (byte*)resultData.Scan0;
+                int cols = this.Width;
+                int rows = this.Height;
+                for (int row = 0; row < rows; ++row, pWrite += resultData.Stride - cols * Channels)
+                {
+                    for (int col = 0; col < cols; ++col, pWrite += Channels)
+                    {
+                        // TODO: Improve performance
+                        CVRgbPixel c = this[row, col];
+                        pWrite[0] = c.R;
+                        pWrite[1] = c.G;
+                        pWrite[2] = c.B;
+                    }
+                }
+            }
+
+            result.UnlockBits(resultData);
+
+            //BitmapData resultData = result.LockBits(new Rectangle(Point.Empty, new Size(this.Width, this.Height)), ImageLockMode.WriteOnly, pixelFormat);
+            //__CvMatPtr stubMat = PInvoke.cvCreateMat(1, 1, 0);
+            //__CvMatPtr dstMat = PInvoke.cvCreateMat(1, 1, 0);
+            //__CvMatPtr imageMat;
+            //__CvArrPtr arrPtr = this.Array;
+            //int origin = 0;
+            //unsafe {
+            //    if (PInvoke.CV_IS_IMAGE_HDR(arrPtr)) {
+            //        origin = (new __IplImagePtr(arrPtr.ptr)).ToPointer()->origin;
+            //    }
+            //}
+            //imageMat = PInvoke.cvGetMat(arrPtr, stubMat);
+            
+            //IntPtr hBitmapData = resultData.Scan0;
+
+            //PInvoke.cvInitMatHeader(dstMat, this.Height, this.Width, PInvoke.CV_MAKETYPE(8, 3), hBitmapData, (this.Width * this.Channels + 3) & -4);
+
+            //unsafe
+            //{
+            //    PInvoke.cvConvertImage(image, dstMat.ptr,
+            //        Internal.ToPointer()->origin == 1 ? (int)CVConvertImageFlags.Flip : 0);
+            //}
+
+            //result.UnlockBits(resultData);
+            
+            // TODO: Realese resources...
+            
+            // Setting Pallete
+            //if (pixelFormat == PixelFormat.Format8bppIndexed)
+            //{
+            //    for (byte i = 0; i <= 255; ++i) result.Palette.Entries[i] = Color.FromArgb(i, i, i);
+            //}
+            return result;
+
+                //throw new NotImplementedException();
+            //__CvSize size = new __CvSize(0,0);
             //int channels = 0;
-            //void* dst_ptr = 0;
+            //IntPtr dst_ptr = IntPtr.Zero;
             //const int channels0 = 3;
             //int origin = 0;
-            //CvMat stub, dst, *image;
+            //__CvMatPtr stub = PInvoke.cvCreateMat(1,1,0), dst;
+            //IntPtr image;
             //bool changed_size = false; // philipg
 
-            //HDC hdc = CreateCompatibleDC(0);
-            //CvArr* arr = this->Array;
+            ////HDC hdc = CreateCompatibleDC(0);
+            //IntPtr hdc = CreateCompatibleDC(IntPtr.Zero);
 
-            //if (CV_IS_IMAGE_HDR(arr)) origin = ((IplImage*)arr)->origin;
+            //__CvArrPtr arr = this.Array;
 
-            //image = cvGetMat(arr, &stub);
+            //if (PInvoke.CV_IS_IMAGE_HDR(arr)) origin = ((__IplImage*) arr.ptr.ToPointer())->origin;
 
-            //uchar buffer[sizeof(BITMAPINFO) + 255*sizeof(RGBQUAD)];
-            //BITMAPINFO* binfo = (BITMAPINFO*)buffer;
+            //image = PInvoke.cvGetMat(arr, &stub);
+            
+            //byte buffer = new byte[sizeof(BITMAPINFO) + 255*sizeof(RGBQUAD)];
+            ////BITMAPINFO* binfo = (BITMAPINFO*)buffer;
 
             //size.cx = image->width;
             //size.cy = image->height;
@@ -533,8 +621,8 @@ namespace OpenCVDotNet
             //if (hBitmap == NULL)
             //    return nullptr;
 
-            //cvInitMatHeader(&dst, size.cy, size.cx, CV_8UC3, dst_ptr, (size.cx * channels + 3) & -4);
-            //cvConvertImage(image, &dst, origin == 0 ? CV_CVTIMG_FLIP : 0);
+            //PInvoke.cvInitMatHeader(&dst, size.cy, size.cx, CV_8UC3, dst_ptr, (size.cx * channels + 3) & -4);
+            //PInvoke.cvConvertImage(image, &dst, origin == 0 ? CV_CVTIMG_FLIP : 0);
 
             //System.Drawing.Bitmap^ bmpImage = System.Drawing.Image::FromHbitmap(IntPtr(hBitmap));
 
@@ -542,33 +630,35 @@ namespace OpenCVDotNet
             //DeleteDC(hdc);
 
             //return bmpImage;
-		}
 
-        //static void FillBitmapInfo( BITMAPINFO* bmi, int width, int height, int bpp, int origin )
+
+        }
+
+        //static unsafe void FillBitmapInfo( BITMAPINFO* bmi, int width, int height, int bpp, int origin )
         //{
-        //    throw new NotImplementedException();
-            //assert( bmi && width >= 0 && height >= 0 && (bpp == 8 || bpp == 24 || bpp == 32));
+        ////    throw new NotImplementedException();
+        //    assert( bmi && width >= 0 && height >= 0 && (bpp == 8 || bpp == 24 || bpp == 32));
+            
+        //    BITMAPINFOHEADER* bmih = &(bmi->bmiHeader);
 
-            //BITMAPINFOHEADER* bmih = &(bmi->bmiHeader);
+        //    //memset( bmih, 0, System.Runtime.InteropServices.SizeOf(*bmih));
+        //    bmih->biSize = System.Runtime.InteropServices.Marshal.SizeOf(BITMAPINFOHEADER);
+        //    bmih->biWidth = width;
+        //    bmih->biHeight = origin ? abs(height) : -abs(height);
+        //    bmih->biPlanes = 1;
+        //    bmih->biBitCount = (ushort)bpp;
+        //    bmih->biCompression = BI_RGB;
 
-            //memset( bmih, 0, sizeof(*bmih));
-            //bmih->biSize = sizeof(BITMAPINFOHEADER);
-            //bmih->biWidth = width;
-            //bmih->biHeight = origin ? abs(height) : -abs(height);
-            //bmih->biPlanes = 1;
-            //bmih->biBitCount = (unsigned short)bpp;
-            //bmih->biCompression = BI_RGB;
-
-            //if( bpp == 8 )
-            //{
-            //    RGBQUAD* palette = bmi->bmiColors;
-            //    int i;
-            //    for( i = 0; i < 256; i++ )
-            //    {
-            //        palette[i].rgbBlue = palette[i].rgbGreen = palette[i].rgbRed = (BYTE)i;
-            //        palette[i].rgbReserved = 0;
-            //    }
-            //}
+        //    //if( bpp == 8 )
+        //    //{
+        //    //    RGBQUAD* palette = bmi->bmiColors;
+        //    //    int i;
+        //    //    for( i = 0; i < 256; i++ )
+        //    //    {
+        //    //        palette[i].rgbBlue = palette[i].rgbGreen = palette[i].rgbRed = (BYTE)i;
+        //    //        palette[i].rgbReserved = 0;
+        //    //    }
+        //    //}
         //}
 
 		public System.Drawing.Rectangle RegionOfInterest
