@@ -13,9 +13,16 @@ namespace OpenCVDotNet
         private const int CV_CN_SHIFT = 3;
         private const int CV_DEPTH_MAX = (1 << CV_CN_SHIFT);
 
+        internal static __CvTermCriteria cvTermCriteria(int type, int max_iter, double epsilon)
+        {
+            __CvTermCriteria t = new __CvTermCriteria();
 
-        [DllImport("cxts001.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern __CvTermCriteria cvTermCriteria(int type, int max_iter, double epsilon);
+            t.type = type;
+            t.max_iter = max_iter;
+            t.epsilon = (float)epsilon;
+
+            return t;
+        }
 
         internal static __CvRect cvRect(int x, int y, int width, int height)
         {

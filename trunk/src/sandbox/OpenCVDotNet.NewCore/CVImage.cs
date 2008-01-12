@@ -11,7 +11,7 @@ namespace OpenCVDotNet
 
 
     #region CVConnectedComp
-	public unsafe class CVConnectedComp
+	public class CVConnectedComp
 	{
 	    private	double area;
         private byte r, g, b;
@@ -19,14 +19,14 @@ namespace OpenCVDotNet
         private __CvSeqPtr contour;
 	    private System.Drawing.Color avgColor;
 
-	    internal CVConnectedComp(__CvConnectedComp* input)
+	    internal CVConnectedComp(ref __CvConnectedComp input)
 		{
-			area = input->area;
+			area = input.area;
 
-			avgColor = CVUtils.ScalarToColor(input->value);
+			avgColor = CVUtils.ScalarToColor(input.value);
 
-			rect = new System.Drawing.Rectangle(input->rect.x, input->rect.y, input->rect.width, input->rect.height);
-			contour = input->contour;
+			rect = new System.Drawing.Rectangle(input.rect.x, input.rect.y, input.rect.width, input.rect.height);
+			contour = input.contour;
 		}
 
 		public CVConnectedComp(System.Drawing.Rectangle rect)
@@ -168,7 +168,6 @@ namespace OpenCVDotNet
         #region Load Image
 		public void LoadImage(String filename, bool isColor)
         {
-            System.Windows.Forms. MessageBox.Show("here0");
             if (!System.IO.File.Exists(filename)) {
 				throw new System.IO.FileNotFoundException(filename);
 			}
@@ -176,7 +175,6 @@ namespace OpenCVDotNet
 			Release();
 
             image = PInvoke.cvLoadImage(filename, isColor ? 1 : 0);
-            System.Windows.Forms.MessageBox.Show("here1");
 			created = true;
 		}
         #endregion
@@ -185,9 +183,13 @@ namespace OpenCVDotNet
 		public void Release()
 		{
 			if (!created) return;
-
+            //created = false;
 			__IplImagePtr ptr = image;
-			PInvoke.cvReleaseImage(ref ptr);
+            if (ptr.ptr != IntPtr.Zero)
+            {
+                PInvoke.cvReleaseImage(ref ptr);
+                image = new __IplImagePtr();
+            }
 		}
         #endregion
 
@@ -546,9 +548,9 @@ namespace OpenCVDotNet
                     {
                         // TODO: Improve performance
                         CVRgbPixel c = this[row, col];
-                        pWrite[0] = c.R;
+                        pWrite[0] = c.B;
                         pWrite[1] = c.G;
-                        pWrite[2] = c.B;
+                        pWrite[2] = c.R;
                     }
                 }
             }
@@ -665,9 +667,7 @@ namespace OpenCVDotNet
 		{
             get
 			{
-                System.Windows.Forms.MessageBox.Show("::1:" + Internal.ptr);
 				__CvRect rc = PInvoke.cvGetImageROI(Internal.ptr);
-                System.Windows.Forms.MessageBox.Show("::2:" + Internal.ptr); 
                 return new System.Drawing.Rectangle(rc.x, rc.y, rc.width, rc.height);
 			}
 			set
@@ -687,28 +687,28 @@ namespace OpenCVDotNet
 
 		public CVImage CalcBackProject(CVHistogram histogram)
 		{
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
-            //CVImage[] planes = Split();
+            CVImage[] planes = Split();
 
-            //CVImage backProjection = 
-            //    new CVImage(
-            //        planes[0].RegionOfInterest.Width, 
-            //        planes[0].RegionOfInterest.Height, 
-            //        planes[0].Depth, 
-            //        planes[0].Channels);
+            CVImage backProjection =
+                new CVImage(
+                    planes[0].RegionOfInterest.Width,
+                    planes[0].RegionOfInterest.Height,
+                    planes[0].Depth,
+                    planes[0].Channels);
 
-            //__IplImagePtr[] iplImages = new __IplImagePtr[planes.Length];
-            //for (int i = 0; i < planes.Length; ++i)
-            //    iplImages[i] = planes[i].Internal;
-            
-            //PInvoke.cvCalcBackProject(iplImages, backProjection.Internal, histogram.Internal);
-            
+            __IplImagePtr[] iplImages = new __IplImagePtr[planes.Length];
+            for (int i = 0; i < planes.Length; ++i)
+                iplImages[i] = planes[i].Internal;
 
-            //for (int i = 0; i < planes.Length; ++i)
-            //    planes[i].Release();
+            PInvoke.cvCalcBackProject(iplImages, backProjection.Internal, histogram.Internal);
 
-            //return backProjection;
+
+            for (int i = 0; i < planes.Length; ++i)
+                planes[i].Release();
+
+            return backProjection;
 		}
 
 		public CVConnectedComp MeanShift(System.Drawing.Rectangle window)
@@ -733,23 +733,22 @@ namespace OpenCVDotNet
 
 		public CVConnectedComp MeanShift(System.Drawing.Rectangle window, int termCriteria, int maxIterations, double eps)
 		{
-            throw new NotImplementedException();
-            //System.Drawing.Rectangle realWindow = new System.Drawing.Rectangle(0, 0, Width, Height);
-            //if (!realWindow.IntersectsWith(window))
-            //{
-            //    CVConnectedComp cc = new CVConnectedComp(window);
-            //    return cc;
-            //}
+            System.Drawing.Rectangle realWindow = new System.Drawing.Rectangle(0, 0, Width, Height);
+            if (!realWindow.IntersectsWith(window))
+            {
+                CVConnectedComp cc = new CVConnectedComp(window);
+                return cc;
+            }
 
-            //realWindow.Intersect(window);
+            realWindow.Intersect(window);
 
-            //__CvRect wnd = new __CvRect(realWindow);
-            //__CvTermCriteria tc = PInvoke.cvTermCriteria(termCriteria, maxIterations, eps);
-			
-            //__CvConnectedComp comp = new __CvConnectedComp();
-            //PInvoke.cvMeanShift(Internal, wnd, tc, ref comp);
+            __CvRect wnd = new __CvRect(realWindow);
+            __CvTermCriteria tc = PInvoke.cvTermCriteria(termCriteria, maxIterations, eps);
 
-            //return new CVConnectedComp(&comp);
+            __CvConnectedComp comp = new __CvConnectedComp();
+            PInvoke.cvMeanShift(Internal, wnd, tc, ref comp);
+
+            return new CVConnectedComp(ref comp);
 		}
 
 		public CVImage CopyRegion(System.Drawing.Rectangle rect)
