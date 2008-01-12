@@ -26,8 +26,10 @@ namespace OpenCVDotNet
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern __IplImagePtr cvLoadImage([MarshalAs(UnmanagedType.LPStr)]string filename);
+        internal static __IplImagePtr cvLoadImage(string filename)
+        {
+            return cvLoadImage(filename, 1);
+        }
 
         /// <summary>
         /// /// <summary>

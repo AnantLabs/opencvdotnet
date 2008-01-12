@@ -337,11 +337,11 @@ namespace OpenCVDotNet
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvTermCriteria
     {
-        int    type;  /* may be combination of
-                         CV_TERMCRIT_ITER
-                         CV_TERMCRIT_EPS */
-        int    max_iter;
-        double epsilon;
+        internal int    type;  /* may be combination of
+                                 CV_TERMCRIT_ITER
+                                 CV_TERMCRIT_EPS */
+        internal int    max_iter;
+        internal double epsilon;
     }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
