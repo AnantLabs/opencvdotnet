@@ -105,6 +105,52 @@ namespace OpenCVDotNet
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvCanny(__CvArrPtr image, __CvArrPtr dst, double threshold1, double threshold2, int apertureSize);
 
+        #region cvPreCornerDetect
+        /// <summary>
+        /// Calculates feature map for corner detection
+        /// The function cvPreCornerDetect calculates the function Dx2Dyy+Dy2Dxx - 2DxDyDxy where D? denotes one of the first image derivatives and D?? denotes a second image derivative. The corners can be found as local maximums of the function:
+        /// <code>
+        /// //assume that the image is floating-point
+        /// IplImage* corners = cvCloneImage(image);
+        /// IplImage* dilated_corners = cvCloneImage(image);
+        /// IplImage* corner_mask = cvCreateImage( cvGetSize(image), 8, 1 );
+        /// cvPreCornerDetect( image, corners, 3 );
+        /// cvDilate( corners, dilated_corners, 0, 1 );
+        /// cvSubS( corners, dilated_corners, corners );
+        /// cvCmpS( corners, 0, corner_mask, CV_CMP_GE );
+        /// cvReleaseImage( &corners );
+        /// cvReleaseImage( &dilated_corners );
+        /// </code>
+        /// </summary>
+        /// <param name="image">Input image</param>
+        /// <param name="corners">Image to store the corner candidates</param>
+        /// <param name="apertureSize">parameter for Sobel operator (see cvSobel). </param>
+        [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void cvPreCornerDetect(__CvArrPtr image, __CvArrPtr corners, int aperture_size);
+
+        /// <summary>
+        /// Calculates feature map for corner detection
+        /// The function cvPreCornerDetect calculates the function Dx2Dyy+Dy2Dxx - 2DxDyDxy where D? denotes one of the first image derivatives and D?? denotes a second image derivative. The corners can be found as local maximums of the function:
+        /// <code>
+        /// //assume that the image is floating-point
+        /// IplImage* corners = cvCloneImage(image);
+        /// IplImage* dilated_corners = cvCloneImage(image);
+        /// IplImage* corner_mask = cvCreateImage( cvGetSize(image), 8, 1 );
+        /// cvPreCornerDetect( image, corners, 3 );
+        /// cvDilate( corners, dilated_corners, 0, 1 );
+        /// cvSubS( corners, dilated_corners, corners );
+        /// cvCmpS( corners, 0, corner_mask, CV_CMP_GE );
+        /// cvReleaseImage( &corners );
+        /// cvReleaseImage( &dilated_corners );
+        /// </code>
+        /// </summary>
+        /// <param name="image">Input image</param>
+        /// <param name="corners">Image to store the corner candidates</param>       
+        internal static void cvPreCornerDetect(__CvArrPtr image, __CvArrPtr corners) {
+            cvPreCornerDetect(image, corners, 3);
+        }
+        #endregion
+
         #region Histogram
 
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
