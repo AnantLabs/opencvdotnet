@@ -8,7 +8,7 @@ namespace OpenCVDotNet
     internal static partial class PInvoke
     {
 
-        #region cxcore100.dll
+        
         [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static unsafe extern __IplImagePtr cvCreateImage(__CvSize size, int depth, int channels);
 
@@ -26,7 +26,9 @@ namespace OpenCVDotNet
 
         [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvMinMaxLoc(__CvArrPtr arr, out double min_val, out double max_val, out __CvPoint min_loc, out __CvPoint max_loc, __CvArrPtr mask);
-        #endregion
+
+        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static unsafe extern __IplImagePtr cvCreateImageHeader(__CvSize src, int depth, int channels);
 
         #region cvMerge
         /// <summary>
