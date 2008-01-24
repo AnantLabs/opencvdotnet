@@ -10,7 +10,7 @@ namespace OpenCVDotNet
  */
 
 
-	public unsafe class CVCapture : IDisposable
+	public class CVCapture : IDisposable
 	{
 	    private __CvCapturePtr capture;
 	    private string filename;

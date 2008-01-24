@@ -7,24 +7,25 @@ namespace OpenCVDotNet
     
     internal static partial class PInvoke
     {
+        internal const string CXCORE100_DLL = "cxcore100.dll";
 
         
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern __IplImagePtr cvCreateImage(__CvSize size, int depth, int channels);
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern __IplImagePtr cvCreateImage(__CvSize size, int depth, int channels);
 
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvCreateImage(__CvArrPtr src0, __CvArrPtr src1, __CvArrPtr src2,
             __CvArrPtr src3, __CvArrPtr dst);
 
 
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern void cvCreateImage(out __IplImagePtr image);
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void cvCreateImage(out __IplImagePtr image);
 
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvSplit(__CvArrPtr arr, __CvArrPtr dst0, __CvArrPtr dst1,
             __CvArrPtr dst2, __CvArrPtr dst3);
 
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvMinMaxLoc(__CvArrPtr arr, out double min_val, out double max_val, out __CvPoint min_loc, out __CvPoint max_loc, __CvArrPtr mask);
 
         [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -40,7 +41,7 @@ namespace OpenCVDotNet
         /// <param name="src2"></param>
         /// <param name="src3"></param>
         /// <param name="dst"></param>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvMerge(__CvArrPtr src0, __CvArrPtr src1, __CvArrPtr src2,
             __CvArrPtr src3, __CvArrPtr dst);
         #endregion
@@ -50,8 +51,8 @@ namespace OpenCVDotNet
         /// Releases IPL image header and data
         /// </summary>
         /// <param name="image"></param>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern void cvReleaseImage(ref __IplImagePtr image);
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void cvReleaseImage(ref __IplImagePtr image);
         #endregion
 
         #region cvZero
@@ -59,7 +60,7 @@ namespace OpenCVDotNet
         /// Clears all the array elements (sets them to 0)
         /// </summary>
         /// <param name="image"></param>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvSetZero(__CvArrPtr image);
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace OpenCVDotNet
         /// <param name="thickness"></param>
         /// <param name="line_type"></param>
         /// <param name="shift"></param>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvLine(__CvArrPtr image, __CvPoint pt1, __CvPoint pt2,
             __CvScalar color, int thickness,
             int line_type, int shift);
@@ -140,7 +141,7 @@ namespace OpenCVDotNet
         /// <param name="thickness"></param>
         /// <param name="line_type"></param>
         /// <param name="shift"></param>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void cvRectangle(__CvArrPtr image, __CvPoint pt1, __CvPoint pt2, 
             __CvScalar color, int thickness, int line_type, int shift);
 
@@ -196,8 +197,8 @@ namespace OpenCVDotNet
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern __CvRect cvGetImageROI(IntPtr image);
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern __CvRect cvGetImageROI(IntPtr image);
         #endregion
 
         #region cvSetImageROI
@@ -207,8 +208,8 @@ namespace OpenCVDotNet
         /// <param name="image"></param>
         /// <param name="rect"></param>
         /// <returns></returns>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern void cvSetImageROI(__IplImagePtr image, __CvRect rect);
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void cvSetImageROI(__IplImagePtr image, __CvRect rect);
         #endregion
 
         #region cvResetImageROI
@@ -217,8 +218,8 @@ namespace OpenCVDotNet
         /// </summary>
         /// <param name="image"></param>
         /// <param name="rect"></param>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern void cvResetImageROI(__IplImagePtr image);
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void cvResetImageROI(__IplImagePtr image);
         #endregion
 
         #region cvCloneImage
@@ -227,13 +228,13 @@ namespace OpenCVDotNet
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern __IplImagePtr cvCloneImage(__IplImagePtr image);
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern __IplImagePtr cvCloneImage(__IplImagePtr image);
         #endregion
 
         #region cvGetReal1D
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern double cvGetReal1D(__CvArrPtr arr, int idx);
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern double cvGetReal1D(__CvArrPtr arr, int idx);
         #endregion
 
         #region cvQueryHistValue_1D
@@ -267,7 +268,7 @@ namespace OpenCVDotNet
         /// <param name="userdata"></param>
         /// <param name="prev_userdata"></param>
         /// <returns></returns>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr cvRedirectError(__CvErrorCallback errorHandler, IntPtr userdata, IntPtr prev_userdata);
 
         /// <summary>
@@ -315,7 +316,7 @@ namespace OpenCVDotNet
         /// <param name="data"></param>
         /// <param name="step"></param>
         /// <returns></returns>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern __CvMatPtr cvInitMatHeader( __CvMatPtr mat, int rows, int cols, int type, IntPtr data, int step);
         #endregion
 
@@ -327,7 +328,7 @@ namespace OpenCVDotNet
         /// <param name="cols"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        [DllImport("cxcore100.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal static extern __CvMatPtr cvCreateMat( int rows, int cols, int type );
         #endregion
     }

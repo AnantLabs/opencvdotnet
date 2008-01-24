@@ -17,6 +17,7 @@ namespace OpenCVDotNet
         [Obsolete("Use MarshalAsAttribute instead")]
         unsafe static void StringToCharPointer(string str, char* output, int size)
         {
+            throw new NotImplementedException("Use Marshal as string");
             //unsafe
             //{
             //    output = &str.ToCharArray()[0];
@@ -41,14 +42,11 @@ namespace OpenCVDotNet
         //    throw new CVException(new String((char*) err_msg));
         //}
 
-        private unsafe static PInvoke.__CvErrorCallback _errHandler = ErrorHandler;
+        private static PInvoke.__CvErrorCallback _errHandler = ErrorHandler;
 
         public static void ErrorsToExceptions()
         {
-            unsafe
-            {
-                //PInvoke.cvRedirectError(_errHandler);
-            }
+            PInvoke.cvRedirectError(_errHandler);
         }
 
 		internal static System.Drawing.Color ScalarToColor(__CvScalar scalar)

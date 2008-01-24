@@ -167,7 +167,7 @@ namespace OpenCVDotNet
         //    return new __CvArrPtr(iplImagePtr);
         //}
 
-        public static unsafe implicit operator __CvArrPtr(IntPtr iplImagePtr)
+        public static implicit operator __CvArrPtr(IntPtr iplImagePtr)
         {
             return new __CvArrPtr(iplImagePtr);
         }
@@ -210,6 +210,11 @@ namespace OpenCVDotNet
     #region __CvCapturePointer
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvCapturePtr { public IntPtr ptr; public __CvCapturePtr(IntPtr ptr) { this.ptr = ptr; } }
+    #endregion
+
+    #region __CvVideoWriterPointer
+    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
+    internal struct __CvVideoWriterPtr { public IntPtr ptr; public __CvVideoWriterPtr(IntPtr ptr) { this.ptr = ptr; } }
     #endregion
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
@@ -278,7 +283,7 @@ namespace OpenCVDotNet
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal unsafe struct __DataUnion
+    internal struct __DataUnion
     {
         //[FieldOffset(0)]
         //char* ptr; // TODO: actually is uchar
