@@ -161,14 +161,14 @@ namespace OpenCVDotNet
             cvCalcArrHist(image, dst, accumulate, IntPtr.Zero);
         }
 
-        internal static unsafe void cvCalcHist(__IplImagePtr[] image, IntPtr hist, int accumulate, __CvArrPtr mask)
+        internal static void cvCalcHist(__IplImagePtr[] image, IntPtr hist, int accumulate, __CvArrPtr mask)
         {
             __CvArrPtr[] arrs = new __CvArrPtr[image.Length];
             for (int i = 0; i < image.Length; ++i) arrs[i] = image[i];
             cvCalcArrHist(arrs, hist, accumulate, mask);
         }
 
-        internal static unsafe void cvCalcHist(__IplImagePtr[] image, IntPtr hist, int accumulate)
+        internal static void cvCalcHist(__IplImagePtr[] image, IntPtr hist, int accumulate)
         {
             __CvArrPtr[] arrs = new __CvArrPtr[image.Length];
             for (int i = 0; i < image.Length; ++i) arrs[i] = image[i];
@@ -176,7 +176,7 @@ namespace OpenCVDotNet
         }
 
 
-        internal static unsafe void cvCalcHist(__IplImagePtr[] image, IntPtr hist)
+        internal static void cvCalcHist(__IplImagePtr[] image, IntPtr hist)
         {
             __CvArrPtr[] arrs = new __CvArrPtr[image.Length];
             for (int i = 0; i < image.Length; ++i) arrs[i] = image[i];
@@ -190,7 +190,7 @@ namespace OpenCVDotNet
         /// <param name="dst"></param>
         /// <param name="hist"></param>
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern void cvCalcArrBackProject(__CvArrPtr[] image, __CvArrPtr dst, IntPtr hist);
+        internal static extern void cvCalcArrBackProject(__CvArrPtr[] image, __CvArrPtr dst, IntPtr hist);
 
         /// <summary>
         /// Calculates back project
@@ -198,12 +198,12 @@ namespace OpenCVDotNet
         /// <param name="image"></param>
         /// <param name="dst"></param>
         /// <param name="hist"></param>
-        internal static unsafe void cvCalcBackProject(__CvArrPtr[] image, __CvArrPtr dst, IntPtr hist)
+        internal static void cvCalcBackProject(__CvArrPtr[] image, __CvArrPtr dst, IntPtr hist)
         {
             cvCalcArrBackProject(image, dst, hist);
         }
 
-        internal static unsafe void cvCalcBackProject(__IplImagePtr[] image, __CvArrPtr dst, IntPtr hist)
+        internal static void cvCalcBackProject(__IplImagePtr[] image, __CvArrPtr dst, IntPtr hist)
         {
             __CvArrPtr[] arrs = new __CvArrPtr[image.Length];
             for (int i = 0; i < image.Length; ++i) arrs[i] = image[i];
@@ -245,7 +245,7 @@ namespace OpenCVDotNet
         /// </summary>
         /// <param name="hist"></param>
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static unsafe extern void cvReleaseHist(ref IntPtr hist);
+        internal static extern void cvReleaseHist(ref IntPtr hist);
 
         ///// <summary>
         ///// Finds indices and values of minimum and maximum histogram bins
@@ -309,12 +309,12 @@ namespace OpenCVDotNet
         /// <param name="ranges">Ranges for each bin set</param>
         /// <param name="uniform">Uniform distribution of bin ranges?</param>	
 
-        internal static unsafe IntPtr cvCreateHist(int[] dims, int type, float[][] ranges)
+        internal static IntPtr cvCreateHist(int[] dims, int type, float[][] ranges)
         {
             return cvCreateHist(dims, type, ranges, true);
         }
 
-        internal static unsafe IntPtr cvCreateHistOld(int[] dims, int type, float[][] ranges, bool uniform)
+        internal static IntPtr cvCreateHistOld(int[] dims, int type, float[][] ranges, bool uniform)
         {
             IntPtr[] pts = new IntPtr[dims.Length];
             for (int i = 0; i < dims.Length; i++) pts[i] = IntPtr.Zero;
@@ -325,7 +325,7 @@ namespace OpenCVDotNet
 
         
 
-        internal static unsafe IntPtr cvCreateHist(int[] dims, int type, float[][] ranges, bool uniform)
+        internal static IntPtr cvCreateHist(int[] dims, int type, float[][] ranges, bool uniform)
         {
             IntPtr[] unmanagedRanges = UnmanagedArray.ToUnmanaged(ranges);
             IntPtr hist = cvCreateHist(unmanagedRanges.Length, dims, type, unmanagedRanges, (uniform ? 1 : 0));
@@ -333,7 +333,7 @@ namespace OpenCVDotNet
             return hist;
         }
 
-        private static unsafe void auxLoadAndCall(int recursiveDepth, IntPtr[] pts, int[] dims, int type, float[][] ranges, bool uniform, out IntPtr result)
+        private static void auxLoadAndCall(int recursiveDepth, IntPtr[] pts, int[] dims, int type, float[][] ranges, bool uniform, out IntPtr result)
         {
             // This Trick was taken from SharperCV:
             // Key problem:  we need to use "fixed" to pin every array in "ranges".  But "fixed"
@@ -353,10 +353,13 @@ namespace OpenCVDotNet
             }
             else
             {
-                fixed (float* p = ranges[recursiveDepth])
+                unsafe
                 {
-                    pts[recursiveDepth] = new IntPtr(p);
-                    auxLoadAndCall(recursiveDepth + 1, pts, dims, type, ranges, uniform, out result);
+                    fixed (float* p = ranges[recursiveDepth])
+                    {
+                        pts[recursiveDepth] = new IntPtr(p);
+                        auxLoadAndCall(recursiveDepth + 1, pts, dims, type, ranges, uniform, out result);
+                    }
                 }
             }
         }
@@ -395,7 +398,7 @@ namespace OpenCVDotNet
         [DllImport(CV100_DLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr cvCreateHist(int dims, int[] sizes, int type, IntPtr[] ranges, int uniform);
 
-        internal static unsafe IntPtr cvCreateHist(int[] dims, int type)
+        internal static IntPtr cvCreateHist(int[] dims, int type)
         {
             return cvCreateHist(dims, type, null, true);
         }

@@ -25,9 +25,9 @@ namespace OpenCVDotNet
 		Fps30 = 30,
 	}
 
-	public unsafe class CVVideoWriter
+	public class CVVideoWriter
 	{
-	    private	__CvVideoWriter* vw_;
+	    private	__CvVideoWriterPtr vw_;
 
     	public		CVVideoWriter(string filename, int width, int height)
 		{
@@ -61,8 +61,8 @@ namespace OpenCVDotNet
 
 		public void Release()
 		{
-            __CvVideoWriter* ptr = vw_; // CvVideoWriter* prt = vw_
-			PInvoke.cvReleaseVideoWriter(&ptr);
+            __CvVideoWriterPtr ptr = vw_; // CvVideoWriter* prt = vw_
+			PInvoke.cvReleaseVideoWriter(ref ptr);
 		}
 
 	    protected void Create(string filename, CVCodec codec, CVFramesPerSecond fps, int width, int height, bool is_color)
