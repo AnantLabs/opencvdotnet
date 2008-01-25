@@ -100,35 +100,65 @@ namespace OpenCVDotNet
             System.Drawing.Imaging.BitmapData bData = 
                     sourceImage.LockBits(rect, 
                     System.Drawing.Imaging.ImageLockMode.ReadWrite, 
-                    sourceImage.PixelFormat);
+                    PixelFormat.Format24bppRgb);
 
-            __IplImagePtr tempImage = PInvoke.cvCreateImageHeader(new __CvSize(sourceImage.Width, sourceImage.Height), 8, Bitmap.GetPixelFormatSize(sourceImage.PixelFormat) / 8);
-            tempImage.ToPointer()->imageData = (byte*)bData.Scan0.ToPointer();
-
-            __IplImagePtr[] dst = new __IplImagePtr[4];
-            for (int i = 0; i < 4; ++i)
+            // New implementation:
+            int pixelSizeInBytes = 8;
+            int numberOfChannels = 3;
+            this.image = 
+                PInvoke.cvCreateImage(
+                    new __CvSize(sourceImage.Width, sourceImage.Height),
+                    pixelSizeInBytes,
+                    numberOfChannels);
+            unsafe
             {
-                dst[i] = IntPtr.Zero;
-            }
-            for (int i = 0; i < tempImage.ToPointer()->nChannels; i++)
-            {
-                dst[i] = PInvoke.cvCreateImage(new __CvSize(sourceImage.Width, sourceImage.Height), 8, 1);
+                int height = sourceImage.Height;
+                int width = sourceImage.Width;
+                byte* pRead = (byte*)bData.Scan0.ToPointer();
+                byte* pWrite = this.Internal.ToPointer()->imageData;
+
+                int nReadStride = bData.Stride - width * numberOfChannels;
+                int nWriteStride = this.Internal.ToPointer()->widthStep - width * numberOfChannels;
+
+                for (int row = 0; row < height; ++row, pRead += nReadStride, pWrite += nWriteStride) {
+                    for (int col = 0; col < width; ++col, pRead += numberOfChannels, pWrite += numberOfChannels)
+                    {
+                        pWrite[0] = pRead[0]; // Blue
+                        pWrite[1] = pRead[1]; // Green
+                        pWrite[2] = pRead[2]; // Red
+                    }
+                }
             }
 
-            PInvoke.cvSplit(
-                tempImage,
-                dst[0],
-                dst[1],
-                dst[2],
-                dst[3]);
+            #region Old Implementation
+            //__IplImagePtr tempImage = PInvoke.cvCreateImageHeader(new __CvSize(sourceImage.Width, sourceImage.Height), 8, Bitmap.GetPixelFormatSize(sourceImage.PixelFormat) / 8);
+            //tempImage.ToPointer()->imageData = (byte*)bData.Scan0.ToPointer();
 
-            image = PInvoke.cvCreateImage(new __CvSize(sourceImage.Width, sourceImage.Height), 8, 3); 
-            PInvoke.cvMerge(dst[0], dst[1], dst[2], IntPtr.Zero, image) ;
+            //__IplImagePtr[] dst = new __IplImagePtr[4];
+            //for (int i = 0; i < 4; ++i)
+            //{
+            //    dst[i] = IntPtr.Zero;
+            //}
+            //for (int i = 0; i < tempImage.ToPointer()->nChannels; i++)
+            //{
+            //    dst[i] = PInvoke.cvCreateImage(new __CvSize(sourceImage.Width, sourceImage.Height), 8, 1);
+            //}
 
-            for (int i = 0; i < tempImage.ToPointer()->nChannels; i++)
-            {
-                PInvoke.cvReleaseImage(ref dst[i]);
-            }
+            //PInvoke.cvSplit(
+            //    tempImage,
+            //    dst[0],
+            //    dst[1],
+            //    dst[2],
+            //    dst[3]);
+
+            //image = PInvoke.cvCreateImage(new __CvSize(sourceImage.Width, sourceImage.Height), 8, 3); 
+            //PInvoke.cvMerge(dst[0], dst[1], dst[2], IntPtr.Zero, image) ;
+
+            //for (int i = 0; i < tempImage.ToPointer()->nChannels; i++)
+            //{
+            //    PInvoke.cvReleaseImage(ref dst[i]);
+            //}
+            #endregion
 
             created = true; 
             sourceImage.UnlockBits(bData); 
@@ -230,7 +260,8 @@ namespace OpenCVDotNet
                 unsafe
                 {
                     byte* pixel = GetPixelPtr(row, col);
-                    if (Channels == 3)
+
+                    if (Channels == 3 || Channels == 4)
                     {
                         return new OpenCVDotNet.CVRgbPixel(pixel[2], pixel[1], pixel[0]);
                     }
@@ -240,7 +271,7 @@ namespace OpenCVDotNet
                     }
                     else
                     {
-                        return null;
+                        throw new NotSupportedException("Channels number is not supported.");
                     }
                 }
 			}
@@ -542,15 +573,34 @@ namespace OpenCVDotNet
                 byte* pWrite = (byte*)resultData.Scan0;
                 int cols = this.Width;
                 int rows = this.Height;
-                for (int row = 0; row < rows; ++row, pWrite += resultData.Stride - cols * Channels)
+                if (Bitmap.IsAlphaPixelFormat(pixelFormat))
                 {
-                    for (int col = 0; col < cols; ++col, pWrite += Channels)
+                    for (int row = 0; row < rows; ++row, pWrite += resultData.Stride - cols * Channels)
                     {
-                        // TODO: Improve performance
-                        CVRgbPixel c = this[row, col];
-                        pWrite[0] = c.B;
-                        pWrite[1] = c.G;
-                        pWrite[2] = c.R;
+                        for (int col = 0; col < cols; ++col, pWrite += Channels)
+                        {
+                            // TODO: Improve performance
+                            CVRgbPixel c = this[row, col];
+                            pWrite[0] = c.B;
+                            pWrite[1] = c.G;
+                            pWrite[2] = c.R;
+                            pWrite[3] = 255;
+                        }
+                    }
+                }
+                else
+                {
+
+                    for (int row = 0; row < rows; ++row, pWrite += resultData.Stride - cols * Channels)
+                    {
+                        for (int col = 0; col < cols; ++col, pWrite += Channels)
+                        {
+                            // TODO: Improve performance
+                            CVRgbPixel c = this[row, col];
+                            pWrite[0] = c.B;
+                            pWrite[1] = c.G;
+                            pWrite[2] = c.R;
+                        }
                     }
                 }
             }

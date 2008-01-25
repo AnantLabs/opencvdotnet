@@ -16,7 +16,6 @@ namespace OpenCVDotNet
         private const string HIGHGUI_DLL = @"highgui100.dll";
 
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern __IplImagePtr cvCreateImageHeader(__CvSize src, int depth, int channels);
         internal static extern void cvConvertImage(__CvArrPtr src, __CvArrPtr dst, int flags);
         
         /// <summary>

@@ -34,7 +34,7 @@ namespace OpenCVDotNet
 
         static int ErrorHandler(int status, [MarshalAs(UnmanagedType.LPStr)]string func_name, [MarshalAs(UnmanagedType.LPStr)]string err_msg, [MarshalAs(UnmanagedType.LPStr)]string file_name, int line, [MarshalAs(UnmanagedType.LPStr)]string userdata)
         {
-            throw new CVException(err_msg);
+            throw new CVException(err_msg, line, file_name, status, userdata);
         }
         
         //static unsafe int ErrorHandler(int status, byte* func_name, byte* err_msg, byte* file_name, int line, byte* userdata)
