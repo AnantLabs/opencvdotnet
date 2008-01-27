@@ -1,9 +1,8 @@
 using System;
-using System.Drawing;
 using OpenCVDotNet;
 using System.Runtime.InteropServices;
 
-namespace OpenCVDotNet
+namespace OpenCVDotNet.Native
 {
     
     internal static partial class PInvoke
@@ -16,14 +15,14 @@ namespace OpenCVDotNet
         private const string HIGHGUI_DLL = @"highgui100.dll";
 
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void cvConvertImage(__CvArrPtr src, __CvArrPtr dst, int flags);
+        public static extern void cvConvertImage(__CvArrPtr src, __CvArrPtr dst, int flags);
         
         /// <summary>
         /// load a color image from file
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        internal static __IplImagePtr cvLoadImage(string filename)
+        public static __IplImagePtr cvLoadImage(string filename)
         {
             return cvLoadImage(filename, 1);
         }
@@ -39,14 +38,14 @@ namespace OpenCVDotNet
         /// specified images are converted to 8bit</param>
         /// <returns></returns>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern __IplImagePtr cvLoadImage([MarshalAs(UnmanagedType.LPStr)]string filename, int iscolor);
+        public static extern __IplImagePtr cvLoadImage([MarshalAs(UnmanagedType.LPStr)]string filename, int iscolor);
 
         /// <summary>
         /// stop capturing/reading and free resources
         /// </summary>
         /// <param name="capture"></param>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void cvReleaseCapture(ref __CvCapturePtr capture);
+        public static extern void cvReleaseCapture(ref __CvCapturePtr capture);
 
         
         /// <summary>
@@ -55,7 +54,7 @@ namespace OpenCVDotNet
         /// <param name="index"></param>
         /// <returns></returns>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern __CvCapturePtr cvCreateCameraCapture(int index);
+        public static extern __CvCapturePtr cvCreateCameraCapture(int index);
 
         /// <summary>
         /// retrieve capture properties
@@ -64,7 +63,7 @@ namespace OpenCVDotNet
         /// <param name="property_id"></param>
         /// <returns></returns>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern double cvGetCaptureProperty(__CvCapturePtr capture, int property_id);
+        public static extern double cvGetCaptureProperty(__CvCapturePtr capture, int property_id);
 
         /// <summary>
         /// set capture properties
@@ -74,7 +73,7 @@ namespace OpenCVDotNet
         /// <param name="value"></param>
         /// <returns></returns>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int cvSetCaptureProperty(__CvCapturePtr capture, int property_id, double value);
+        public static extern int cvSetCaptureProperty(__CvCapturePtr capture, int property_id, double value);
 
         /// <summary>
         /// Just a combination of cvGrabFrame and cvRetrieveFrame
@@ -83,12 +82,12 @@ namespace OpenCVDotNet
         /// <param name="capture"></param>
         /// <returns></returns>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern __IplImagePtr cvQueryFrame(__CvCapturePtr capture);
+        public static extern __IplImagePtr cvQueryFrame(__CvCapturePtr capture);
 
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern __CvCapturePtr cvCreateFileCapture([MarshalAs(UnmanagedType.LPStr)]string filename);
+        public static extern __CvCapturePtr cvCreateFileCapture([MarshalAs(UnmanagedType.LPStr)]string filename);
 
-        internal static char CV_FOURCC(char c1, char c2,char c3,char c4)  {
+        public static char CV_FOURCC(char c1, char c2,char c3,char c4)  {
             return (char)(((c1)&255) + (((c2)&255)<<8) + (((c3)&255)<<16) + (((c4)&255)<<24));
         }
 
@@ -102,7 +101,7 @@ namespace OpenCVDotNet
         /// <param name="is_color"></param>
         /// <returns></returns>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern __CvVideoWriterPtr cvCreateVideoWriter([MarshalAs(UnmanagedType.LPStr)]string filename, int fourcc, double fps, __CvSize frame_size, int is_color);
+        public static extern __CvVideoWriterPtr cvCreateVideoWriter([MarshalAs(UnmanagedType.LPStr)]string filename, int fourcc, double fps, __CvSize frame_size, int is_color);
 
         /// <summary>
         /// initialize video file writer
@@ -113,7 +112,7 @@ namespace OpenCVDotNet
         /// <param name="frame_size"></param>
         /// <returns></returns>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern __CvVideoWriterPtr cvCreateVideoWriter([MarshalAs(UnmanagedType.LPStr)]string filename, int fourcc, double fps, __CvSize frame_size);
+        public static extern __CvVideoWriterPtr cvCreateVideoWriter([MarshalAs(UnmanagedType.LPStr)]string filename, int fourcc, double fps, __CvSize frame_size);
 
         /// <summary>
         /// write frame to video file
@@ -122,14 +121,14 @@ namespace OpenCVDotNet
         /// <param name="image"></param>
         /// <returns></returns>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int cvWriteFrame(__CvVideoWriterPtr writer, __IplImagePtr image);
+        public static extern int cvWriteFrame(__CvVideoWriterPtr writer, __IplImagePtr image);
 
         /// <summary>
         /// close video file writer
         /// </summary>
         /// <param name="writer"></param>
         [DllImport(HIGHGUI_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void cvReleaseVideoWriter(ref __CvVideoWriterPtr writer);
+        public static extern void cvReleaseVideoWriter(ref __CvVideoWriterPtr writer);
         #endregion
     }
 }

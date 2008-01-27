@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text;
+using OpenCVDotNet.Native;
 
 namespace OpenCVDotNet
 {
-	
-    
-
-
     #region CVConnectedComp
 	public class CVConnectedComp
 	{
@@ -350,15 +347,6 @@ namespace OpenCVDotNet
 			}
 		}
 
-		
-        //virtual public __CvArrPtr Array
-        //{
-        //    get
-        //    {
-        //        pin_ptr<CvArr> intr = image;
-        //        return intr;
-        //    }
-        //}
         internal override __CvArrPtr  Array
         {
 	        get { 
@@ -737,8 +725,6 @@ namespace OpenCVDotNet
 
 		public CVImage CalcBackProject(CVHistogram histogram)
 		{
-            //throw new NotImplementedException();
-
             CVImage[] planes = Split();
 
             CVImage backProjection =
@@ -837,12 +823,44 @@ namespace OpenCVDotNet
 
 		public CVConnectedComp CamShift(System.Drawing.Rectangle window, int termCriteria, int maxIterations, double eps)
 		{
-            throw new NotImplementedException();
-            //__CvConnectedComp cc = new __CvConnectedComp();
-            //PInvoke.cvCamShift(Internal, new __CvRect(window), PInvoke.cvTermCriteria(termCriteria, maxIterations, eps), ref cc);
-            //return new CVConnectedComp(&cc);
+            __CvConnectedComp cc = new __CvConnectedComp();
+            PInvoke.cvCamShift(Internal, new __CvRect(window), PInvoke.cvTermCriteria(termCriteria, maxIterations, eps), ref cc);
+            return new CVConnectedComp(ref cc);
 		}
 
+        public CVImage DrawContours()
+		{
+            CVImage grayscaled = (this.Channels == 1 ? this : this.ToGrayscale());
+
+            __CvMemStoragePtr storage = PInvoke.cvCreateMemStorage(0);
+            __CvSeqPtr first_contour;
+            CVImage result = new CVImage(this.Width, this.Height, CVDepth.Depth8U, 3);
+            unsafe
+            {
+                int num_contours = PInvoke.cvFindContours(
+                    grayscaled.Internal,
+                    storage,
+                    out first_contour,
+                    sizeof(__CvContour),
+                    CV_RETR.CV_RETR_EXTERNAL,
+                    CV_CHAIN.CV_CHAIN_APPROX_SIMPLE,
+                    new __CvPoint(0, 0)
+                );
+            
+                // Makes an output image and draw contours:
+                __CvSeq* cont = first_contour.ToPointer();
+                
+                for (; (cont = cont->_cvSequenceFields.__cvTreeNodeFields.h_next.ToPointer()) != null;)
+                {
+                    PInvoke.cvDrawContours(result.Array, new __CvSeqPtr(cont), new __CvScalar(255, 0, 0), new __CvScalar(0, 0, 0), 0, (int)CVGlobalConsts.CV_FILLED);
+                }
+            }
+            
+            PInvoke.cvReleaseMemStorage(ref storage);
+            return result;
+		}
+
+        
 		public CVImage Clone()
 		{
 			CVImage n = new CVImage((__IplImagePtr)IntPtr.Zero);

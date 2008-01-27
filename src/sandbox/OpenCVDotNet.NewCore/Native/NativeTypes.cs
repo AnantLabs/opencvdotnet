@@ -1,28 +1,66 @@
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace OpenCVDotNet
+namespace OpenCVDotNet.Native
 {
     #region Native Types
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __MarshaledStructurePtr<T> where T : struct
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
         
-        public __MarshaledStructurePtr(IntPtr ptr) { this.ptr = ptr; }
+        internal __MarshaledStructurePtr(IntPtr ptr) { this.ptr = ptr; }
     }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvMemStoragePtr { public IntPtr ptr; public __CvMemStoragePtr(IntPtr ptr) { this.ptr = ptr; } }
+    internal struct __CvMemStoragePtr { internal IntPtr ptr; internal __CvMemStoragePtr(IntPtr ptr) { this.ptr = ptr; } }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvSeqPtr { public IntPtr ptr; public __CvSeqPtr(IntPtr ptr) { this.ptr = ptr; } }
+    internal struct __CvSeqPtr { 
+        internal IntPtr ptr; 
+        public __CvSeqPtr(IntPtr ptr) { this.ptr = ptr; }
+        public unsafe __CvSeqPtr(__CvSeq* ptr) { this.ptr = new IntPtr((void*)ptr); }
+        public unsafe __CvSeq* ToPointer()
+        {
+            return ((__CvSeq*)ptr.ToPointer());
+        }
+    }
+
+    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct __CvTreeNodeFields__CvSeqPtr
+    {
+        public int       flags;         /* micsellaneous flags */
+        public int       header_size;   /* size of sequence header */
+        public __CvSeqPtr h_prev; /* previous sequence */
+        public __CvSeqPtr h_next; /* next sequence */
+        public __CvSeqPtr v_prev; /* 2nd previous sequence */
+        public __CvSeqPtr v_next;  /* 2nd next sequence */
+    }
+
+    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct __CV_SEQUENCE_FIELDS
+    {
+        public __CvTreeNodeFields__CvSeqPtr __cvTreeNodeFields;
+        public int total;                       /* total number of elements */
+        public int elem_size;                   /* size of sequence element in bytes */
+        public char* block_max;                 /* maximal bound of the last block */
+        char* ptr;                              /* current write pointer */
+        int delta_elems;                        /* how many elements allocated when the seq grows */
+        __CvMemStoragePtr storage;              /* where the seq is stored */
+        __CvSeqBlockPtr free_blocks;            /* free blocks list */
+        __CvSeqBlockPtr first;                  /* pointer to the first sequence block */
+    }
+
+    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
+    internal struct __CvSeq
+    {
+        public __CV_SEQUENCE_FIELDS _cvSequenceFields;
+    }
+
 
     internal struct __CvHistogramPtr {
-        public IntPtr ptr; public __CvHistogramPtr(IntPtr ptr) { this.ptr = ptr; }
-        
+        public IntPtr ptr; internal __CvHistogramPtr(IntPtr ptr) { this.ptr = ptr; }
     }
     
     #region __IplImage
@@ -32,58 +70,58 @@ namespace OpenCVDotNet
         /// <summary>
         /// sizeof(IplImage)
         /// </summary>
-        public int nSize;
+        internal int nSize;
         /// <summary>
         /// version (=0)
         /// </summary>
-        public int ID;
+        internal int ID;
         /// <summary>
         /// Most of OpenCV functions support 1,2,3 or 4 channels
         /// </summary>
-        public int nChannels;
+        internal int nChannels;
 
         int pad11;
         /// <summary>
         /// pixel depth in bits: IPL_DEPTH_8U, IPL_DEPTH_8S, IPL_DEPTH_16S,
         /// IPL_DEPTH_32S, IPL_DEPTH_32F and IPL_DEPTH_64F are supported
         /// </summary>
-        public int depth;
+        internal int depth;
 
         int pad12, pad13;
 
         /// <summary>
-        /// 0 - public interleaved color channels, 
+        /// 0 - internal interleaved color channels, 
         /// 1 - separate color channels.
         /// cvCreateImage can only create interleaved images
         /// </summary>
-        public int dataOrder;    
+        internal int dataOrder;    
  
         /// <summary>
         /// 0 - top-left origin,
         /// 1 - bottom-left origin (Windows bitmaps style)
         /// </summary>
-        public int origin;
+        internal int origin;
 
         /// <summary>
         /// Alignment of image rows (4 or 8).
         /// OpenCV ignores it and uses widthStep instead
         /// </summary>
-        public int align;
+        internal int align;
 
         /// <summary>
         /// image width in pixels
         /// </summary>
-        public int width;
+        internal int width;
 
         /// <summary>
         /// image height in pixels
         /// </summary>
-        public int height;
+        internal int height;
 
         /// <summary>
         /// image ROI. when it is not NULL, this specifies image region to process
         /// </summary>
-        public byte* roi;
+        internal byte* roi;
 
         byte* pad8, pad9, pad10;
         /// <summary>
@@ -91,17 +129,17 @@ namespace OpenCVDotNet
         /// (=image->height*image->widthStep
         /// in case of interleaved data)
         /// </summary>
-        public int imageSize;
+        internal int imageSize;
         
         /// <summary>
         /// pointer to aligned image data
         /// </summary>
-        public byte* imageData;   /*  */
+        internal byte* imageData;   /*  */
         
         /// <summary>
         /// size of aligned image row in bytes
         /// </summary>
-        public int widthStep;
+        internal int widthStep;
         
         /// <summary>
         /// ignored by OpenCV
@@ -112,15 +150,15 @@ namespace OpenCVDotNet
         /// pointer to a very origin of image data
         /// (not necessarily aligned) - it is needed for correct image deallocation
         /// </summary>
-        public byte* imageDataOrigin; /*  */
+        internal byte* imageDataOrigin; /*  */
     }
     #endregion
 
     #region __CvPoint
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvPoint { public int x, y; 
-        public __CvPoint(Point pt) { x = pt.X; y = pt.Y; }
-        public __CvPoint(int x, int y) { this.x = x; this.y = y; }
+    internal struct __CvPoint { internal int x, y; 
+        internal __CvPoint(System.Drawing.Point pt) { x = pt.X; y = pt.Y; }
+        internal __CvPoint(int x, int y) { this.x = x; this.y = y; }
     }
     #endregion
 
@@ -128,10 +166,8 @@ namespace OpenCVDotNet
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvScalar { 
         public double v0, v1, v2, v3; 
-        public __CvScalar(params double[] val) { v0 = val[0]; v1 = val[1]; v2 = val[2]; v3 = val[3]; } 
-        public __CvScalar(CVScalar scalar) { 
-            v0 = scalar.val[0]; v1 = scalar.val[1]; v2 = scalar.val[2]; v3 = scalar.val[3]; 
-        }
+        public __CvScalar(params double[] val) { v0 = val[0]; v1 = val[1]; v2 = val[2]; v3 = val[3]; }
+        public __CvScalar(CVScalar cvScalar) : this(cvScalar.val) { }
     }
     #endregion
 
@@ -142,27 +178,27 @@ namespace OpenCVDotNet
 
     #region __CvArrPtr
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvArrPtr
+    public struct __CvArrPtr
     {
-        public IntPtr ptr;
-        public __CvArrPtr(CVArr arr)
+        internal IntPtr ptr;
+        internal __CvArrPtr(CVArr arr)
         {
             ptr = (arr != null ? arr.Ptr : IntPtr.Zero);
         }
-        public __CvArrPtr(IntPtr ptr)
+        internal __CvArrPtr(IntPtr ptr)
         {
             this.ptr = ptr;
         }
-        //public unsafe __CvArrPtr(__CvArr* arrPtr)
+        //internal unsafe __CvArrPtr(__CvArr* arrPtr)
         //{
         //    ptr = (IntPtr) arrPtr;
         //}
-        //public unsafe __CvArrPtr(__IplImage* iplImagePtr)
+        //internal unsafe __CvArrPtr(__IplImage* iplImagePtr)
         //{
         //    ptr = (IntPtr)iplImagePtr;
         //}
 
-        //public static unsafe implicit operator __CvArrPtr(__IplImage* iplImagePtr)
+        //internal static unsafe implicit operator __CvArrPtr(__IplImage* iplImagePtr)
         //{
         //    return new __CvArrPtr(iplImagePtr);
         //}
@@ -177,8 +213,8 @@ namespace OpenCVDotNet
     #region __IplImagePointer
     internal struct __IplImagePtr
     {
-        public IntPtr ptr;
-        public __IplImagePtr(IntPtr ptr)
+        internal IntPtr ptr;
+        internal __IplImagePtr(IntPtr ptr)
         {
             this.ptr = ptr;
         }
@@ -191,7 +227,7 @@ namespace OpenCVDotNet
             return new __IplImagePtr(ptr);
         }
         
-        public unsafe __IplImage* ToPointer() {
+        internal unsafe __IplImage* ToPointer() {
             return (__IplImage*)this.ptr.ToPointer();
         }
     }
@@ -203,25 +239,25 @@ namespace OpenCVDotNet
     {
         int width; /* width of the rectangle */
         int height; /* height of the rectangle */
-        public __CvSize(int width, int height) { this.width = width; this.height = height; }
+        internal __CvSize(int width, int height) { this.width = width; this.height = height; }
     }
     #endregion
 
     #region __CvCapturePointer
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvCapturePtr { public IntPtr ptr; public __CvCapturePtr(IntPtr ptr) { this.ptr = ptr; } }
+    internal struct __CvCapturePtr { internal IntPtr ptr; internal __CvCapturePtr(IntPtr ptr) { this.ptr = ptr; } }
     #endregion
 
     #region __CvVideoWriterPointer
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvVideoWriterPtr { public IntPtr ptr; public __CvVideoWriterPtr(IntPtr ptr) { this.ptr = ptr; } }
+    internal struct __CvVideoWriterPtr { internal IntPtr ptr; internal __CvVideoWriterPtr(IntPtr ptr) { this.ptr = ptr; } }
     #endregion
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvImagePtr { public IntPtr ptr; public __CvImagePtr(CVImage img) { ptr = img.Ptr; } }
+    internal struct __CvImagePtr { internal IntPtr ptr; internal __CvImagePtr(CVImage img) { ptr = img.Ptr; } }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvMatPtr { public IntPtr ptr; public __CvMatPtr(CVMat mat) { ptr = mat.Ptr; } }
+    internal struct __CvMatPtr { internal IntPtr ptr; internal __CvMatPtr(CVMat mat) { ptr = mat.Ptr; } }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvPoint2D32f {
@@ -232,21 +268,24 @@ namespace OpenCVDotNet
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvSize2D32f
     {
-        public float width;
-        public float height;
+        internal float width;
+        internal float height;
     }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvPoint2D32fPtr { public IntPtr ptr; }
+    internal struct __CvPoint2D32fPtr { internal IntPtr ptr; }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __IplConvKernelPtr { public IntPtr ptr; }
+    internal struct __IplConvKernelPtr { internal IntPtr ptr; }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvMomentsPtr { public IntPtr ptr; }
+    internal struct __CvMomentsPtr { internal IntPtr ptr; }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvHuMomentsPtr { public IntPtr ptr; }
+    internal struct __CvHuMomentsPtr { internal IntPtr ptr; }
+
+    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
+    internal struct __CvSeqBlockPtr { internal IntPtr ptr; }
 
     #region __CvConnectedComp
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
@@ -263,12 +302,12 @@ namespace OpenCVDotNet
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvRect
     {
-        public int x;
-        public int y;
-        public int width;
-        public int height;
+        internal int x;
+        internal int y;
+        internal int width;
+        internal int height;
 
-        public __CvRect(Rectangle rect)
+        internal __CvRect(System.Drawing.Rectangle rect)
         {
             x = rect.X; y = rect.Y; width = rect.Width; height = rect.Height;
         }
@@ -321,8 +360,8 @@ namespace OpenCVDotNet
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal unsafe struct __CvHistogram
     {
-        public int type;
-        public __CvArrPtr bins;
+        internal int type;
+        internal __CvArrPtr bins;
 
         //[MarshalAsAttribute(UnmanagedType.LPArray, SizeConst = 64)] // Maybe this one?
         //[MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = (int)CVGlobalConsts.CV_MAX_DIM * 2)] // Or maybe this one?
@@ -332,7 +371,7 @@ namespace OpenCVDotNet
         __CvMatND mat; /* embedded matrix header for array histograms */
     }
 
-    public enum CVTermCriteriaType
+    internal enum CVTermCriteriaType
     {
         CV_TERMCRIT_ITER = 1,
         CV_TERMCRIT_NUMBER = CV_TERMCRIT_ITER,
@@ -356,22 +395,93 @@ namespace OpenCVDotNet
         /// center of the box
         /// </summary>
         [MarshalAs(UnmanagedType.LPStruct)]
-        public __CvPoint2D32f center;
+        internal __CvPoint2D32f center;
         /// <summary>
         /// box width and length
         /// </summary>
         [MarshalAs(UnmanagedType.LPStruct)]
-        public __CvSize2D32f size;
+        internal __CvSize2D32f size;
         /// <summary>
         /// angle between the horizontal axis and the first side (i.e. length) in degrees
         /// </summary>
-        public float angle;
+        internal float angle;
     }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal unsafe struct __CvCapture
     {
         void* vtable; //CvCaptureVTable* vtable;
+    }
+
+    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct __CvContour
+    {
+        //CV_CONTOUR_FIELDS()
+        
+        //CV_SEQUENCE_FIELDS()
+
+        //CV_TREE_NODE_FIELDS(CvSeq);
+        /// <summary>
+        /// micsellaneous flags
+        /// </summary>
+        int       flags;
+        /// <summary>
+        /// size of sequence header
+        /// </summary>
+        int       header_size;
+        /// <summary>
+        /// previous sequence
+        /// </summary>
+        __CvSeqPtr h_prev;
+        /// <summary>
+        /// next sequence
+        /// </summary>
+        __CvSeqPtr  h_next;
+        /// <summary>
+        /// 2nd previous sequence
+        /// </summary>
+        __CvSeqPtr  v_prev;
+        /// <summary>
+        /// 2nd next sequence
+        /// </summary>
+        __CvSeqPtr  v_next;
+
+        /// <summary>
+        /// total number of elements
+        /// </summary>
+        int  total;
+        /// <summary>
+        /// size of sequence element in bytes
+        /// </summary>
+        int       elem_size;
+        /// <summary>
+        /// maximal bound of the last block
+        /// </summary>
+        char*     block_max;
+        /// <summary>
+        /// current write pointer
+        /// </summary>
+        char*     ptr;
+        /// <summary>
+        /// how many elements allocated when the seq grows
+        /// </summary>
+        int       delta_elems;
+        /// <summary>
+        /// where the seq is stored
+        /// </summary>
+        __CvMemStoragePtr storage;
+        /// <summary>
+        /// free blocks list
+        /// </summary>
+        __CvSeqBlockPtr free_blocks;
+        /// <summary>
+        /// pointer to the first sequence block
+        /// </summary>
+        __CvSeqBlockPtr first;
+        
+        __CvRect rect;
+        int color;
+        fixed int reserved[3];
     }
 
     internal struct __CvVideoWriter { }
