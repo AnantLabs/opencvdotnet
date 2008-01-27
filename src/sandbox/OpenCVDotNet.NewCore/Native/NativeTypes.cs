@@ -166,7 +166,25 @@ namespace OpenCVDotNet.Native
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvScalar { 
         public double v0, v1, v2, v3; 
-        public __CvScalar(params double[] val) { v0 = val[0]; v1 = val[1]; v2 = val[2]; v3 = val[3]; }
+        public __CvScalar(params double[] val) {
+            switch (val.Length)
+            {
+                case 1:
+                    v0 = val[0]; v1 = 0; v2 = 0; v3 = 0;
+                    break;
+                case 2:
+                    v0 = val[0]; v1 = val[1]; v2 = 0; v3 = 0;
+                    break;
+                case 3:
+                    v0 = val[0]; v1 = val[1]; v2 = val[2]; v3 = 0;
+                    break;
+                case 4:
+                    v0 = val[0]; v1 = val[1]; v2 = val[2]; v3 = val[3];
+                    break;
+                default:
+                    throw new ArgumentException("array length should be between 1 and 4");
+            }
+        }
         public __CvScalar(CVScalar cvScalar) : this(cvScalar.val) { }
     }
     #endregion

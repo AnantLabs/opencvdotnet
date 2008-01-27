@@ -48,6 +48,74 @@ namespace OpenCVDotNet.Native
         public static extern void cvReleaseMemStorage( ref __CvMemStoragePtr storage );
 
 
+        /// <summary>
+        /// Draws contour outlines or filled interiors on the image
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="contour"></param>
+        /// <param name="external_color"></param>
+        /// <param name="hole_color"></param>
+        /// <param name="max_level"></param>
+        /// <param name="thickness"></param>
+        /// <param name="line_type"></param>
+        /// <param name="offset"></param>
+        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cvDrawContours(__CvArrPtr img, __CvSeqPtr contour,
+            __CvScalar external_color, __CvScalar hole_color,
+            int max_level, int thickness, int line_type, __CvPoint offset);
+
+        /// <summary>
+        /// Draws contour outlines or filled interiors on the image
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="contour"></param>
+        /// <param name="external_color"></param>
+        /// <param name="hole_color"></param>
+        /// <param name="max_level"></param>
+        /// <param name="thickness"></param>
+        /// <param name="line_type"></param>
+        public static void cvDrawContours(__CvArrPtr img, __CvSeqPtr contour,
+            __CvScalar external_color, __CvScalar hole_color,
+            int max_level, int thickness, int line_type)
+        {
+            cvDrawContours(img, contour, external_color, hole_color,
+                max_level, thickness, line_type, new __CvPoint(0, 0));
+        }
+
+        /// <summary>
+        /// Draws contour outlines or filled interiors on the image
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="contour"></param>
+        /// <param name="external_color"></param>
+        /// <param name="hole_color"></param>
+        /// <param name="max_level"></param>
+        /// <param name="thickness"></param>
+        public static void cvDrawContours(__CvArrPtr img, __CvSeqPtr contour,
+            __CvScalar external_color, __CvScalar hole_color,
+            int max_level, int thickness)
+        {
+            cvDrawContours(img, contour, external_color, hole_color,
+                max_level, thickness, 8, new __CvPoint(0, 0));
+        }
+
+        /// <summary>
+        /// Draws contour outlines or filled interiors on the image
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="contour"></param>
+        /// <param name="external_color"></param>
+        /// <param name="hole_color"></param>
+        /// <param name="max_level"></param>
+        public static void cvDrawContours(__CvArrPtr img, __CvSeqPtr contour,
+            __CvScalar external_color, __CvScalar hole_color,
+            int max_level)
+        {
+            cvDrawContours(img, contour, external_color, hole_color,
+                max_level, 1, 8, new __CvPoint(0, 0));
+        }
+
+
         [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void cvSplit(__CvArrPtr arr, __CvArrPtr dst0, __CvArrPtr dst1,
             __CvArrPtr dst2, __CvArrPtr dst3);
