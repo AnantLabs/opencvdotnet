@@ -1,9 +1,7 @@
 using System;
-using System.Drawing;
-using OpenCVDotNet;
 using System.Runtime.InteropServices;
 
-namespace OpenCVDotNet
+namespace OpenCVDotNet.Native
 {
 
     internal static partial class PInvoke
@@ -13,7 +11,7 @@ namespace OpenCVDotNet
         private const int CV_CN_SHIFT = 3;
         private const int CV_DEPTH_MAX = (1 << CV_CN_SHIFT);
 
-        internal static __CvTermCriteria cvTermCriteria(int type, int max_iter, double epsilon)
+        public static __CvTermCriteria cvTermCriteria(int type, int max_iter, double epsilon)
         {
             __CvTermCriteria t = new __CvTermCriteria();
 
@@ -24,7 +22,7 @@ namespace OpenCVDotNet
             return t;
         }
 
-        internal static __CvRect cvRect(int x, int y, int width, int height)
+        public static __CvRect cvRect(int x, int y, int width, int height)
         {
             __CvRect r;
 
@@ -36,7 +34,7 @@ namespace OpenCVDotNet
             return r;
         }
 
-        internal static bool CV_IS_IMAGE_HDR(__IplImagePtr img)
+        public static bool CV_IS_IMAGE_HDR(__IplImagePtr img)
         {
             unsafe
             {
@@ -44,7 +42,7 @@ namespace OpenCVDotNet
             }
         }
 
-        internal static bool CV_IS_IMAGE(__IplImagePtr img)
+        public static bool CV_IS_IMAGE(__IplImagePtr img)
         {
             unsafe
             {
@@ -52,6 +50,6 @@ namespace OpenCVDotNet
             }
         }
 
-        internal static int CV_MAKETYPE(int depth, int cn) { return ((depth) + (((cn) - 1) << CV_CN_SHIFT)); }
+        public static int CV_MAKETYPE(int depth, int cn) { return ((depth) + (((cn) - 1) << CV_CN_SHIFT)); }
     }
 }

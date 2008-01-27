@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using OpenCVDotNet.Native;
 
 namespace OpenCVDotNet
 {
@@ -8,8 +9,6 @@ namespace OpenCVDotNet
  * (C) 2007 Elad Ben-Israel and Yoav HaCohen
  * This code is licenced under the GPL.
  */
-
-
 	public class CVCapture : IDisposable
 	{
 	    private __CvCapturePtr capture;

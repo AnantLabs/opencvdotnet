@@ -6,7 +6,8 @@ namespace OpenCVDotNet
 {
     internal enum CVGlobalConsts
     {
-        CV_MAX_DIM = 32
+        CV_MAX_DIM = 32,
+        CV_FILLED = -1
     }
 
     public enum CVInterpolation
@@ -28,13 +29,13 @@ namespace OpenCVDotNet
         Depth32S = (0x80000000 | 32),
     }
 
-    public enum CVConvertImageFlags
+    internal enum CVConvertImageFlags
     {
         Default = 0, Flip = 1, Swap_RB = 2
     }
 
     
-    public enum LoadImageMode {
+    internal enum LoadImageMode {
         /// <summary>
         /// 8bit, color or not
         /// </summary>
@@ -57,7 +58,7 @@ namespace OpenCVDotNet
         CV_LOAD_IMAGE_ANYCOLOR    =4,
     }
 
-    enum CV_CAP_PROP {
+    internal enum CV_CAP_PROP {
         CV_CAP_PROP_POS_MSEC       =0,
         CV_CAP_PROP_POS_FRAMES     =1,
         CV_CAP_PROP_POS_AVI_RATIO  =2,
@@ -77,30 +78,88 @@ namespace OpenCVDotNet
 
     }
 
-    enum CV_CAP
+    internal enum CV_CAP
     {
-        
         CV_CAP_ANY       = 0,     // autodetect
 
-        CV_CAP_MIL      =100 ,  // MIL proprietary drivers
+        CV_CAP_MIL      = 100 ,  // MIL proprietary drivers
 
-        CV_CAP_VFW      =200,   // platform native
-        CV_CAP_V4L      =200,
-        CV_CAP_V4L2     =200,
+        CV_CAP_VFW      = 200,   // platform native
+        CV_CAP_V4L      = 200,
+        CV_CAP_V4L2     = 200,
 
-        CV_CAP_FIREWARE =300,   // IEEE 1394 drivers
-        CV_CAP_IEEE1394 =300,
-        CV_CAP_DC1394   =300,
-        CV_CAP_CMU1394  =300,
+        CV_CAP_FIREWARE = 300,   // IEEE 1394 drivers
+        CV_CAP_IEEE1394 = 300,
+        CV_CAP_DC1394   = 300,
+        CV_CAP_CMU1394  = 300,
 
-        CV_CAP_STEREO   =400,   // TYZX proprietary drivers
-        CV_CAP_TYZX     =400,
-        CV_TYZX_LEFT    =400,
-        CV_TYZX_RIGHT   =401,
-        CV_TYZX_COLOR   =402,
-        CV_TYZX_Z       =403,
+        CV_CAP_STEREO   = 400,   // TYZX proprietary drivers
+        CV_CAP_TYZX     = 400,
+        CV_TYZX_LEFT    = 400,
+        CV_TYZX_RIGHT   = 401,
+        CV_TYZX_COLOR   = 402,
+        CV_TYZX_Z       = 403,
 
-        CV_CAP_QT       =500,   // QuickTime
+        CV_CAP_QT       = 500,   // QuickTime
+    }
+    /// <summary>
+    /// contour approximation method
+    /// </summary>
+    internal enum CV_CHAIN
+    {
+        /// <summary>
+        /// Output contours in the Freeman chain code. All orher methods output
+        /// polygons (sequences of vertices).
+        /// </summary>
+        CV_CHAIN_CODE               = 0,
+        /// <summary>
+        /// Translate all the points from the chain code into points.
+        /// </summary>
+        CV_CHAIN_APPROX_NONE        = 1,
+        /// <summary>
+        /// Compress horizontal, vertical, and diagonal segments, that is,
+        /// the function leaves only their ending points.
+        /// </summary>
+        CV_CHAIN_APPROX_SIMPLE      = 2,
+        /// <summary>
+        /// Apply one of the flavors of Teh-Chin chain approximation algorithm.
+        /// </summary>
+        CV_CHAIN_APPROX_TC89_L1     = 3,
+        /// <summary>
+        /// Apply one of the flavors of Teh-Chin chain approximation algorithm.
+        /// </summary>
+        CV_CHAIN_APPROX_TC89_KCOS   = 4,
+        /// <summary>
+        /// Use completely different contour retreival algorithm vis linking
+        /// of horizontal segments of 1's. Only CV_RETR_LIST retrival mode
+        /// can be used with this method.
+        /// </summary>
+        CV_LINK_RUNS                = 5,
+    }
 
+
+    /// <summary>
+    /// contour retrieval mode
+    /// </summary>
+    internal enum CV_RETR
+    {
+        /// <summary>
+        /// Retrieve only the extreme outer contours
+        /// </summary>
+        CV_RETR_EXTERNAL = 0,
+        /// <summary>
+        /// Retrieve all the contours and puts them in the list
+        /// </summary>
+        CV_RETR_LIST     = 1,
+        /// <summary>
+        /// Retrieve all the contours and organizes them into tow-level hierarchy:
+        /// top level are external boundaries of the components, second level are
+        /// boundaries of the holes.
+        /// </summary>
+        CV_RETR_CCOMP    = 2,
+        /// <summary>
+        /// Retrieve all the contours and reconstructs the full hierarchy of nested contours
+        /// </summary>
+        CV_RETR_TREE     = 3,
     }
 }

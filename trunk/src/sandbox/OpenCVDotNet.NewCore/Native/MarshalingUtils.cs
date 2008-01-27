@@ -1,9 +1,8 @@
 using System;
-using System.Drawing;
 using OpenCVDotNet;
 using System.Runtime.InteropServices;
 
-namespace OpenCVDotNet
+namespace OpenCVDotNet.Native
 {
     
     internal static class UnmanagedArray

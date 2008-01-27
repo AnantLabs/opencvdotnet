@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using OpenCVDotNet.Native;
 
 namespace OpenCVDotNet
 {
@@ -12,7 +13,7 @@ namespace OpenCVDotNet
             get;
         }
 
-        public System.IntPtr Ptr
+        internal System.IntPtr Ptr
         {
             get
             {
