@@ -64,6 +64,7 @@ namespace OpenCVDotNet
 	{
         #region Data Members
 	    internal __IplImagePtr image;
+		
 		internal bool created;  
         #endregion
 
@@ -87,8 +88,8 @@ namespace OpenCVDotNet
 
         #region From System.Drawing.Bitmap
 		public unsafe  CVImage(System.Drawing.Bitmap sourceImage) 
-        { 
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(); 
+        {
+			System.Drawing.Rectangle rect = new System.Drawing.Rectangle(); 
             rect.X = 0 ; 
             rect.Y = 0 ; 
             rect.Width = sourceImage.Width; 
@@ -107,26 +108,29 @@ namespace OpenCVDotNet
                     new __CvSize(sourceImage.Width, sourceImage.Height),
                     pixelSizeInBytes,
                     numberOfChannels);
-            unsafe
+            
+			
+			unsafe
             {
                 int height = sourceImage.Height;
                 int width = sourceImage.Width;
                 byte* pRead = (byte*)bData.Scan0.ToPointer();
-                byte* pWrite = this.Internal.ToPointer()->imageData;
+    			byte* pWrite = this.Internal.ToPointer()->imageData;
 
-                int nReadStride = bData.Stride - width * numberOfChannels;
-                int nWriteStride = this.Internal.ToPointer()->widthStep - width * numberOfChannels;
-
+			    int nReadStride = bData.Stride - width * numberOfChannels;
+    			int nWriteStride = this.Internal.ToPointer()->widthStep - width * numberOfChannels;
+				
                 for (int row = 0; row < height; ++row, pRead += nReadStride, pWrite += nWriteStride) {
                     for (int col = 0; col < width; ++col, pRead += numberOfChannels, pWrite += numberOfChannels)
                     {
                         pWrite[0] = pRead[0]; // Blue
-                        pWrite[1] = pRead[1]; // Green
+						pWrite[1] = pRead[1]; // Green
                         pWrite[2] = pRead[2]; // Red
                     }
                 }
             }
 
+	                    
             #region Old Implementation
             //__IplImagePtr tempImage = PInvoke.cvCreateImageHeader(new __CvSize(sourceImage.Width, sourceImage.Height), 8, Bitmap.GetPixelFormatSize(sourceImage.PixelFormat) / 8);
             //tempImage.ToPointer()->imageData = (byte*)bData.Scan0.ToPointer();
@@ -157,9 +161,9 @@ namespace OpenCVDotNet
             //}
             #endregion
 
-            created = true; 
-            sourceImage.UnlockBits(bData); 
-        } 
+            created = true;
+	        sourceImage.UnlockBits(bData); 
+	    } 
         #endregion		
 
 		public CVImage(int width, int height, CVDepth depth, int channels)
@@ -214,7 +218,8 @@ namespace OpenCVDotNet
 			__IplImagePtr ptr = image;
             if (ptr.ptr != IntPtr.Zero)
             {
-                PInvoke.cvReleaseImage(ref ptr);
+				IntPtr ptrAux = ptr.ptr;
+                PInvoke.cvReleaseImage(ref ptrAux);
                 image = new __IplImagePtr();
             }
 		}
@@ -256,8 +261,8 @@ namespace OpenCVDotNet
 			{
                 unsafe
                 {
-                    byte* pixel = GetPixelPtr(row, col);
-
+					byte* pixel = GetPixelPtr(row, col);
+					
                     if (Channels == 3 || Channels == 4)
                     {
                         return new OpenCVDotNet.CVRgbPixel(pixel[2], pixel[1], pixel[0]);
@@ -270,6 +275,8 @@ namespace OpenCVDotNet
                     {
                         throw new NotSupportedException("Channels number is not supported.");
                     }
+					
+					
                 }
 			}
 			set
@@ -296,7 +303,7 @@ namespace OpenCVDotNet
 			}
 		}
         #endregion
-
+		
         #region Width
 		public int Width
 		{
@@ -364,7 +371,7 @@ namespace OpenCVDotNet
 
 		public void Zero()
 		{
-			if (image.ptr != null)
+			if (image.ptr != null) // this allways return true currently on mono 
 				PInvoke.cvZero(image);
 		}
 
@@ -673,8 +680,8 @@ namespace OpenCVDotNet
 
 
         }
-
-        //static unsafe void FillBitmapInfo( BITMAPINFO* bmi, int width, int height, int bpp, int origin )
+		
+		//static unsafe void FillBitmapInfo( BITMAPINFO* bmi, int width, int height, int bpp, int origin )
         //{
         ////    throw new NotImplementedException();
         //    assert( bmi && width >= 0 && height >= 0 && (bpp == 8 || bpp == 24 || bpp == 32));

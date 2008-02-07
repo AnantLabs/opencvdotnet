@@ -1,31 +1,29 @@
 using System;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace OpenCVDotNet.Native
 {
     #region Native Types
 
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __MarshaledStructurePtr<T> where T : struct
-    {
-        internal IntPtr ptr;
-        
-        internal __MarshaledStructurePtr(IntPtr ptr) { this.ptr = ptr; }
-    }
+	
+    /*[System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
+    internal sealed class __CvMemStoragePtr : SafeHandleZeroOrMinusOneIsInvalid 
+	{
+		internal __CvMemStoragePtr () : base(false) {
+		}
+		
+		internal __CvMemStoragePtr (IntPtr ptr) : base(true) {
+			SetHandle(ptr);
+		}
+		
+		override protected bool ReleaseHandle()	{
+			SetHandle (IntPtr.Zero);
+			return true;
+		}
+	}*/
 
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvMemStoragePtr { internal IntPtr ptr; internal __CvMemStoragePtr(IntPtr ptr) { this.ptr = ptr; } }
 
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvSeqPtr { 
-        internal IntPtr ptr; 
-        public __CvSeqPtr(IntPtr ptr) { this.ptr = ptr; }
-        public unsafe __CvSeqPtr(__CvSeq* ptr) { this.ptr = new IntPtr((void*)ptr); }
-        public unsafe __CvSeq* ToPointer()
-        {
-            return ((__CvSeq*)ptr.ToPointer());
-        }
-    }
 
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal unsafe struct __CvTreeNodeFields__CvSeqPtr
@@ -58,10 +56,6 @@ namespace OpenCVDotNet.Native
         public __CV_SEQUENCE_FIELDS _cvSequenceFields;
     }
 
-
-    internal struct __CvHistogramPtr {
-        public IntPtr ptr; internal __CvHistogramPtr(IntPtr ptr) { this.ptr = ptr; }
-    }
     
     #region __IplImage
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
@@ -194,64 +188,8 @@ namespace OpenCVDotNet.Native
     internal struct __CvArr { }
     #endregion
 
-    #region __CvArrPtr
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    public struct __CvArrPtr
-    {
-        internal IntPtr ptr;
-        internal __CvArrPtr(CVArr arr)
-        {
-            ptr = (arr != null ? arr.Ptr : IntPtr.Zero);
-        }
-        internal __CvArrPtr(IntPtr ptr)
-        {
-            this.ptr = ptr;
-        }
-        //internal unsafe __CvArrPtr(__CvArr* arrPtr)
-        //{
-        //    ptr = (IntPtr) arrPtr;
-        //}
-        //internal unsafe __CvArrPtr(__IplImage* iplImagePtr)
-        //{
-        //    ptr = (IntPtr)iplImagePtr;
-        //}
-
-        //internal static unsafe implicit operator __CvArrPtr(__IplImage* iplImagePtr)
-        //{
-        //    return new __CvArrPtr(iplImagePtr);
-        //}
-
-        public static implicit operator __CvArrPtr(IntPtr iplImagePtr)
-        {
-            return new __CvArrPtr(iplImagePtr);
-        }
-    }
-    #endregion
-
-    #region __IplImagePointer
-    internal struct __IplImagePtr
-    {
-        internal IntPtr ptr;
-        internal __IplImagePtr(IntPtr ptr)
-        {
-            this.ptr = ptr;
-        }
-        public static implicit operator __CvArrPtr(__IplImagePtr iplImagePtr)
-        {
-            return new __CvArrPtr(iplImagePtr.ptr);
-        }
-        public static implicit operator __IplImagePtr(IntPtr ptr)
-        {
-            return new __IplImagePtr(ptr);
-        }
-        
-        internal unsafe __IplImage* ToPointer() {
-            return (__IplImage*)this.ptr.ToPointer();
-        }
-    }
-    #endregion
-
     #region __CvSize
+    [Obsolete("Use System.Drawing.Size instead")]
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvSize
     {
@@ -261,50 +199,22 @@ namespace OpenCVDotNet.Native
     }
     #endregion
 
-    #region __CvCapturePointer
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvCapturePtr { internal IntPtr ptr; internal __CvCapturePtr(IntPtr ptr) { this.ptr = ptr; } }
-    #endregion
-
-    #region __CvVideoWriterPointer
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvVideoWriterPtr { internal IntPtr ptr; internal __CvVideoWriterPtr(IntPtr ptr) { this.ptr = ptr; } }
-    #endregion
-
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvImagePtr { internal IntPtr ptr; internal __CvImagePtr(CVImage img) { ptr = img.Ptr; } }
-
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvMatPtr { internal IntPtr ptr; internal __CvMatPtr(CVMat mat) { ptr = mat.Ptr; } }
-
+    [Obsolete("Use System.Drawing.PointF instead")]
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvPoint2D32f {
         float x;
         float y;
     }
 
+    [Obsolete("Use System.Drawing.SizeF instead")]
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvSize2D32f
     {
         internal float width;
         internal float height;
     }
-
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvPoint2D32fPtr { internal IntPtr ptr; }
-
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __IplConvKernelPtr { internal IntPtr ptr; }
-
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvMomentsPtr { internal IntPtr ptr; }
-
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvHuMomentsPtr { internal IntPtr ptr; }
-
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
-    internal struct __CvSeqBlockPtr { internal IntPtr ptr; }
-
+    
+	
     #region __CvConnectedComp
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
     internal struct __CvConnectedComp
@@ -503,7 +413,6 @@ namespace OpenCVDotNet.Native
     }
 
     internal struct __CvVideoWriter { }
-
     
     
     #endregion
