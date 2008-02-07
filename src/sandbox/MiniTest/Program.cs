@@ -12,14 +12,17 @@ namespace Test
         [STAThread]
         static void Main(string[] args)
         {
-            CVUtils.ErrorsToExceptions();
+            //new OpenCVDotNet.Examples.frmTest().ShowDialog();
+            //CVUtils.ErrorsToExceptions();
             TestBitmapConversion();
+            TestCVCapture();
             TestDrawContours();
+            
         }
 
         private static void TestBitmapConversion()
         {
-            CVImage image = new CVImage(new System.Drawing.Bitmap(@"C:\Users\Yoav HaCohen\Pictures\temp\hair_res.bmp"));
+            CVImage image = new CVImage(new System.Drawing.Bitmap(@"D:\Users\Yoav HaCohen\Pictures\temp\hair_res.bmp"));
             new BitmapViewer(image.ToBitmap()).ShowDialog();
         }
 
@@ -31,6 +34,11 @@ namespace Test
             new BitmapViewer(image.ToBitmap()).ShowDialog();
             CVImage res = image.DrawContours();
             new BitmapViewer(res.ToBitmap()).ShowDialog();
+        }
+
+        private static void TestCVCapture()
+        {
+            CVCapture cap = new CVCapture();
         }
     }
 }

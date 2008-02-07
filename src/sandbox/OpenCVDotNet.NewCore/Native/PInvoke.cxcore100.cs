@@ -8,7 +8,7 @@ namespace OpenCVDotNet.Native
     {
         internal const string CXCORE100_DLL = "cxcore100.dll";
 
-        
+        //OJO
         [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern __IplImagePtr cvCreateImage(__CvSize size, int depth, int channels);
 
@@ -146,8 +146,10 @@ namespace OpenCVDotNet.Native
         /// Releases IPL image header and data
         /// </summary>
         /// <param name="image"></param>
-        [DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void cvReleaseImage(ref __IplImagePtr image);
+        //[DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl)]
+        //public static extern void cvReleaseImage(ref __IplImagePtr image);
+		[DllImport(CXCORE100_DLL, CallingConvention = CallingConvention.Cdecl, SetLastError=true)]
+		public static extern void cvReleaseImage(ref IntPtr image);
         #endregion
 
         #region cvZero

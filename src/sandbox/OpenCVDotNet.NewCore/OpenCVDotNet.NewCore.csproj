@@ -58,6 +58,7 @@
     <Compile Include="CVRgbPixel.cs" />
     <Compile Include="CVUtils.cs" />
     <Compile Include="CVVideoWriter.cs" />
+    <Compile Include="Native\SafeHandles.cs" />
     <Compile Include="Native\Enums.cs" />
     <Compile Include="Native\MarshalingUtils.cs" />
     <Compile Include="Native\NativeTypes.cs" />
