@@ -33,16 +33,33 @@ namespace OpenCVDotNet
             return (int)Math.Round(val);
 		}
 
-        static int ErrorHandler(int status, [MarshalAs(UnmanagedType.LPStr)]string func_name, [MarshalAs(UnmanagedType.LPStr)]string err_msg, [MarshalAs(UnmanagedType.LPStr)]string file_name, int line, [MarshalAs(UnmanagedType.LPStr)]string userdata)
-        {
-            throw new CVException(err_msg, line, file_name, status, userdata);
-        }
         
-        //static unsafe int ErrorHandler(int status, byte* func_name, byte* err_msg, byte* file_name, int line, byte* userdata)
-        //{
-        //    throw new CVException(new String((char*) err_msg));
-        //}
 
+        [ThreadStatic]
+        internal static CvErrorContext _errorContext;
+
+        static int ErrorHandler(
+            int status,
+            [MarshalAs(UnmanagedType.LPStr)]string func_name,
+            [MarshalAs(UnmanagedType.LPStr)]string err_msg,
+            [MarshalAs(UnmanagedType.LPStr)]string file_name,
+            int line,
+            [MarshalAs(UnmanagedType.LPStr)]string userdata)
+        {
+            _errorContext = new CvErrorContext(err_msg, line, file_name, status, userdata);
+            return 0; // if this value is non-zero the program is terminated
+        }
+
+        internal static void CheckLastError()
+        {
+            if (_errorContext != null)
+            {
+                CVException cve = new CVException(_errorContext);
+                _errorContext = null;
+                throw cve;
+            }
+        }
+       
         private static PInvoke.__CvErrorCallback _errHandler = ErrorHandler;
 
         public static void ErrorsToExceptions()

@@ -70,6 +70,7 @@ namespace OpenCVDotNet
 		{
             vw_ = PInvoke.cvCreateVideoWriter(filename, (int)codec, (int)fps,
                      new __CvSize(width, height), is_color ? 1 : 0);
+            CVUtils.CheckLastError();
 		}
 	}
 }

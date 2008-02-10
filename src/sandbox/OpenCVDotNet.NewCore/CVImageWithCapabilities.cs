@@ -21,6 +21,7 @@ namespace OpenCVDotNet
         public CVImage CopyMakeBorder(CVImage dst, Point offset, int bordertype, CVScalar value)
         {
             PInvoke.cvCopyMakeBorder(new __CvArrPtr(this), new __CvArrPtr(dst), new __CvPoint(offset), bordertype, new __CvScalar(value));
+            CVUtils.CheckLastError();
             return dst;
         }
 
@@ -168,6 +169,7 @@ namespace OpenCVDotNet
         {
             CVImage dst = this.Clone();
             PInvoke.cvSmooth(new __CvArrPtr(this), new __CvArrPtr(dst), (int)smoothtype, param1, param2, param3, param4);
+            CVUtils.CheckLastError();
             return dst;
         }
         #endregion
@@ -180,6 +182,7 @@ namespace OpenCVDotNet
         {
             CVImage dst = this.Clone();
             PInvoke.cvFilter2D(new __CvArrPtr(this), new __CvArrPtr(dst), new __CvMatPtr(kernel), new __CvPoint(anchor));
+            CVUtils.CheckLastError();
             return dst;
         }
         
@@ -191,7 +194,11 @@ namespace OpenCVDotNet
         /// Finds integral image: SUM(X,Y) = sum(x<X,y<Y)I(x,y)
         /// TODO: Remove 'sum' argument and return a CVArr object
         /// </summary>
-        public void Integral(CVArr sum, CVArr sqsum, CVArr titled_sum) { PInvoke.cvIntegral(new __CvImagePtr(this), new __CvArrPtr(sum), new __CvArrPtr(sqsum), new __CvArrPtr(titled_sum)); }
+        public void Integral(CVArr sum, CVArr sqsum, CVArr titled_sum) { 
+            PInvoke.cvIntegral(new __CvImagePtr(this), new __CvArrPtr(sum), new __CvArrPtr(sqsum), new __CvArrPtr(titled_sum));
+            CVUtils.CheckLastError();
+        }
+
         public void Integral(CVArr sum) { Integral(sum, null); }
         public void Integral(CVArr sum, CVArr sqsum) { Integral(sum, sqsum, null); }
         #endregion
@@ -203,7 +210,10 @@ namespace OpenCVDotNet
         ///   dst_height = floor(src_height/2)[+1]
         /// TODO: Remove 'dst' argument and return a CVImage object
         /// </summary>
-        public void PyrDown(CVImage dst, PyrFilter filter) { PInvoke.cvPyrDown(new __CvImagePtr(this), new __CvImagePtr(dst), (int)filter); }
+        public void PyrDown(CVImage dst, PyrFilter filter) { 
+            PInvoke.cvPyrDown(new __CvImagePtr(this), new __CvImagePtr(dst), (int)filter);
+            CVUtils.CheckLastError();
+        }
         public void PyrDown(CVImage dst) { PyrDown(dst, PyrFilter.CV_GAUSSIAN_5x5); }
         #endregion
 
@@ -214,7 +224,10 @@ namespace OpenCVDotNet
         ///   dst_height = src_height*2
         /// TODO: Remove 'dst' argument and return a CVImage object
         /// </summary>
-        public void PyrUp(CVImage dst, PyrFilter filter) { PInvoke.cvPyrUp(new __CvImagePtr(this), new __CvImagePtr(dst), (int)filter); }
+        public void PyrUp(CVImage dst, PyrFilter filter) { 
+            PInvoke.cvPyrUp(new __CvImagePtr(this), new __CvImagePtr(dst), (int)filter);
+            CVUtils.CheckLastError();
+        }
         public void PyrUp(CVImage dst) { PyrUp(dst, PyrFilter.CV_GAUSSIAN_5x5); }
         #endregion
 
@@ -224,7 +237,10 @@ namespace OpenCVDotNet
         //  is initialized with the headers of subsequent pyramid levels
         /// TODO: Remove 'container' argument and return an object
         /// </summary>
-        public void CalcPyramid(CVArr container, CVMat levels, int level_count, PyrFilter filter) { PInvoke.cvCalcPyramid(new __CvImagePtr(this), new __CvArrPtr(container), levels.Ptr, level_count, (int)filter); }
+        public void CalcPyramid(CVArr container, CVMat levels, int level_count, PyrFilter filter) { 
+            PInvoke.cvCalcPyramid(new __CvImagePtr(this), new __CvArrPtr(container), levels.Ptr, level_count, (int)filter);
+            CVUtils.CheckLastError();
+        }
         public void CalcPyramid(CVArr container, CVMat levels, int level_count) { CalcPyramid(container, levels, level_count, PyrFilter.CV_GAUSSIAN_5x5); }
         #endregion
 
@@ -236,7 +252,10 @@ namespace OpenCVDotNet
         //  of connected components (CvConnectedComp)
         /// TODO: Remove 'dst' argument and return a CVImage object
         /// </summary>
-        public void PyrSegmentation(CVImage dst, IntPtr storage, IntPtr comp, int level, double threshold1, double threshold2) { PInvoke.cvPyrSegmentation(new __CvImagePtr(this), new __CvImagePtr(dst), new __CvMemStoragePtr(storage), new __CvSeqPtr(comp), level, threshold1, threshold2); }
+        public void PyrSegmentation(CVImage dst, IntPtr storage, IntPtr comp, int level, double threshold1, double threshold2) { 
+            PInvoke.cvPyrSegmentation(new __CvImagePtr(this), new __CvImagePtr(dst), new __CvMemStoragePtr(storage), new __CvSeqPtr(comp), level, threshold1, threshold2);
+            CVUtils.CheckLastError();
+        }
         #endregion
 
         #region Pyramid Mean Shift Filtering
@@ -246,14 +265,20 @@ namespace OpenCVDotNet
         /// </summary>
         public void PyrMeanShiftFiltering(CVArr dst, double sp, double sr) { PyrMeanShiftFiltering(dst, sp, sr, 1); }
         public void PyrMeanShiftFiltering(CVArr dst, double sp, double sr, int max_level) { PyrMeanShiftFiltering(dst, sp, sr, max_level, new CVTermCriteria(5, 1.0)); }
-        public void PyrMeanShiftFiltering(CVArr dst, double sp, double sr, int max_level, CVTermCriteria termcrit) { PInvoke.cvPyrMeanShiftFiltering(new __CvArrPtr(this), new __CvArrPtr(dst), sp, sr, max_level, termcrit); }
+        public void PyrMeanShiftFiltering(CVArr dst, double sp, double sr, int max_level, CVTermCriteria termcrit) { 
+            PInvoke.cvPyrMeanShiftFiltering(new __CvArrPtr(this), new __CvArrPtr(dst), sp, sr, max_level, termcrit);
+            CVUtils.CheckLastError();
+        }
         #endregion
 
         #region Watershed
         /// <summary
         /// Segments image using seed "markers"
         /// </summary>
-        public void Watershed(CVArr markers) { PInvoke.cvWatershed(new __CvArrPtr(this), new __CvArrPtr(markers)); }
+        public void Watershed(CVArr markers) { 
+            PInvoke.cvWatershed(new __CvArrPtr(this), new __CvArrPtr(markers));
+            CVUtils.CheckLastError();
+        }
         #endregion
 
         #region Inpaint
@@ -263,6 +288,7 @@ namespace OpenCVDotNet
         /// </summary>
         public void Inpaint(CVArr inpaint_mask, CVArr dst, double inpaintRange, int flags) { 
             PInvoke.cvInpaint(new __CvArrPtr(this), new __CvArrPtr(inpaint_mask), new __CvArrPtr(dst), inpaintRange, flags);
+            CVUtils.CheckLastError();
         }
         #endregion
 
@@ -273,7 +299,10 @@ namespace OpenCVDotNet
         /// Scharr can be used only for the first dx or dy derivative
         /// TODO: Remove 'dst' argument and return a CVImage object
         /// </summary>
-        public void Sobel(CVArr dst, int xorder, int yorder, int aperture_size) { PInvoke.cvSobel(new __CvArrPtr(this), new __CvArrPtr(dst), xorder, yorder, aperture_size); }
+        public void Sobel(CVArr dst, int xorder, int yorder, int aperture_size) { 
+            PInvoke.cvSobel(new __CvArrPtr(this), new __CvArrPtr(dst), xorder, yorder, aperture_size);
+            CVUtils.CheckLastError();
+        }
         public void Sobel(CVArr dst, int xorder, int yorder) { Sobel(dst, xorder, yorder, 3); }
         public static int CV_SCHARR = -1;
         public static int CV_MAX_SOBEL_KSIZE = 7;
@@ -286,6 +315,7 @@ namespace OpenCVDotNet
         /// </summary>
         public void Laplace(CVArr dst, int aperture_size) { 
             PInvoke.cvLaplace(new __CvArrPtr(this), new __CvArrPtr(dst), aperture_size);
+            CVUtils.CheckLastError();
         }
         public void Laplace(CVArr dst) { Laplace(dst, 3); }
         #endregion
@@ -308,6 +338,7 @@ namespace OpenCVDotNet
             int numberOfChannels = (colorSpace.ToString().EndsWith("GRAY") ? 1 : 3);
             CVImage dst = new CVImage(image.Width, image.Height, image.Depth, numberOfChannels);
             PInvoke.cvCvtColor(new __CvArrPtr(image), new __CvArrPtr(dst), (int)colorSpace);
+            CVUtils.CheckLastError();
             return dst;
         }
         #endregion
@@ -317,7 +348,10 @@ namespace OpenCVDotNet
         /// Resizes image (input array is resized to fit the destination array)
         /// TODO: Remove 'dst' argument and return a CVImage object
         /// </summary>
-        public void Resize(CVArr dst, ResizeInterpolation interpolation) { PInvoke.cvResize(new __CvArrPtr(this), new __CvArrPtr(dst), (int)interpolation); }
+        public void Resize(CVArr dst, ResizeInterpolation interpolation) { 
+            PInvoke.cvResize(new __CvArrPtr(this), new __CvArrPtr(dst), (int)interpolation);
+            CVUtils.CheckLastError();
+        }
         public void Resize(CVArr dst) { Resize(dst, ResizeInterpolation.CV_INTER_LINEAR); }
         #endregion
 
@@ -326,7 +360,10 @@ namespace OpenCVDotNet
         /// Warps image with affine transform
         /// TODO: Remove 'dst' argument and return a CVImage object
         ///</summary>
-        public void WarpAffine(CVArr dst, CVMat map_matrix, WarpFlags flags, CVScalar fillval) { PInvoke.cvWarpAffine(new __CvArrPtr(this), new __CvArrPtr(dst), new __CvMatPtr(map_matrix), (int)flags, new __CvScalar(fillval)); }
+        public void WarpAffine(CVArr dst, CVMat map_matrix, WarpFlags flags, CVScalar fillval) { 
+            PInvoke.cvWarpAffine(new __CvArrPtr(this), new __CvArrPtr(dst), new __CvMatPtr(map_matrix), (int)flags, new __CvScalar(fillval));
+            CVUtils.CheckLastError();
+        }
         public void WarpAffine(CVArr dst, CVMat map_matrix, WarpFlags flags) { WarpAffine(dst, map_matrix, flags, new CVScalar()); }
         public void WarpAffine(CVArr dst, CVMat map_matrix) { WarpAffine(dst, map_matrix, WarpFlags.CV_WARP_FILL_OUTLIERS | WarpFlags.CV_WARP_INVERSE_MAP); }
         #endregion
@@ -408,7 +445,7 @@ namespace OpenCVDotNet
 
             // Native call to openCV cvMatchTemplate function:
             PInvoke.cvMatchTemplate(new __CvArrPtr(image), new __CvArrPtr(templateToSearch), new __CvArrPtr(result), (int)method);
-
+            CVUtils.CheckLastError();
             return result;
         }
         #endregion
@@ -423,7 +460,7 @@ namespace OpenCVDotNet
 
 				// Native call to openCV canny algorithm:
 				PInvoke.cvCanny(new __CvArrPtr(image), new __CvArrPtr(result), threshold1, threshold2, aperture_size);
-
+                CVUtils.CheckLastError();
 				return result;
 		}
     }
