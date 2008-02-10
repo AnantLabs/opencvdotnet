@@ -83,6 +83,7 @@ namespace OpenCVDotNet
 		{
 			Create(clone.Width, clone.Height, clone.Depth, clone.Channels);
             PInvoke.cvConvertImage(clone.Array, this.image, clone.Internal.ToPointer()->origin == 1 ? (int)CVConvertImageFlags.Flip : 0);
+            CVUtils.CheckLastError();
 		}
         #endregion
 
@@ -108,7 +109,7 @@ namespace OpenCVDotNet
                     new __CvSize(sourceImage.Width, sourceImage.Height),
                     pixelSizeInBytes,
                     numberOfChannels);
-            
+            CVUtils.CheckLastError();
 			
 			unsafe
             {
@@ -206,6 +207,7 @@ namespace OpenCVDotNet
 			Release();
 
             image = PInvoke.cvLoadImage(filename, isColor ? 1 : 0);
+            CVUtils.CheckLastError();
 			created = true;
 		}
         #endregion
@@ -220,6 +222,7 @@ namespace OpenCVDotNet
             {
 				IntPtr ptrAux = ptr.ptr;
                 PInvoke.cvReleaseImage(ref ptrAux);
+                CVUtils.CheckLastError();
                 image = new __IplImagePtr();
             }
 		}
@@ -397,6 +400,7 @@ namespace OpenCVDotNet
             // __CvScalar here is come instread CV_RGB
 			PInvoke.cvLine(this.Internal, new __CvPoint(pt1.X, pt1.Y), new __CvPoint(pt2.X, pt2.Y),
                 new __CvScalar(color.R, color.G, color.B, 0), thickness, lineType, shift);
+            CVUtils.CheckLastError();
 		}
 
         public void DrawRectangle(System.Drawing.Rectangle rect, System.Drawing.Color color)
@@ -421,6 +425,7 @@ namespace OpenCVDotNet
                 new __CvPoint(rect.Left, rect.Top), 
                 new __CvPoint(rect.Right, rect.Bottom), 
                 new __CvScalar(color.R,color.G,color.B, 0), thickness, lineType, shift);
+            CVUtils.CheckLastError();
 		}
 
         public void Split(CVImage ch0, CVImage ch1, CVImage ch2, CVImage ch3)
@@ -431,6 +436,7 @@ namespace OpenCVDotNet
             __IplImagePtr d3 = ch3 != null ? ch3.image : IntPtr.Zero;
 
 			PInvoke.cvSplit(image, d0, d1, d2, d3);
+            CVUtils.CheckLastError();
 		}
 
         public CVImage[] Split()
@@ -460,6 +466,7 @@ namespace OpenCVDotNet
             __IplImagePtr c1 = green != null ? green.image : IntPtr.Zero;
             __IplImagePtr c2 = red != null ? red.image : IntPtr.Zero;
             PInvoke.cvMerge(c0, c1, c2, IntPtr.Zero, image);
+            CVUtils.CheckLastError();
 		}
 
         public void Merge(CVImage[] rbgChannels)
@@ -512,6 +519,7 @@ namespace OpenCVDotNet
             if (mask != null) maskArr = mask.Array;
 
             PInvoke.cvCalcHist(images, h.Internal, 0, maskArr);
+            CVUtils.CheckLastError();
             return h;
 		}
 
@@ -524,6 +532,7 @@ namespace OpenCVDotNet
 		{
 			CVImage newImage = new CVImage(newWidth, newHeight, Depth, Channels);
 			PInvoke.cvResize(this.image, newImage.image, (int) interpolation);
+            CVUtils.CheckLastError();
 			Release();
 			this.image = newImage.image;
 			newImage.created = false;
@@ -713,6 +722,7 @@ namespace OpenCVDotNet
             get
 			{
 				__CvRect rc = PInvoke.cvGetImageROI(Internal.ptr);
+                CVUtils.CheckLastError();
                 return new System.Drawing.Rectangle(rc.x, rc.y, rc.width, rc.height);
 			}
 			set
@@ -722,12 +732,14 @@ namespace OpenCVDotNet
 
 				irect.Intersect(value);
 				PInvoke.cvSetImageROI(Internal, new __CvRect(irect));
+                CVUtils.CheckLastError();
 			}
 		}
 
 		public void ResetROI()
 		{
 			PInvoke.cvResetImageROI(Internal);
+            CVUtils.CheckLastError();
 		}
 
 		public CVImage CalcBackProject(CVHistogram histogram)
@@ -746,7 +758,7 @@ namespace OpenCVDotNet
                 iplImages[i] = planes[i].Internal;
 
             PInvoke.cvCalcBackProject(iplImages, backProjection.Internal, histogram.Internal);
-
+            CVUtils.CheckLastError();
 
             for (int i = 0; i < planes.Length; ++i)
                 planes[i].Release();
@@ -790,7 +802,7 @@ namespace OpenCVDotNet
 
             __CvConnectedComp comp = new __CvConnectedComp();
             PInvoke.cvMeanShift(Internal, wnd, tc, ref comp);
-
+            CVUtils.CheckLastError();
             return new CVConnectedComp(ref comp);
 		}
 
@@ -832,6 +844,7 @@ namespace OpenCVDotNet
 		{
             __CvConnectedComp cc = new __CvConnectedComp();
             PInvoke.cvCamShift(Internal, new __CvRect(window), PInvoke.cvTermCriteria(termCriteria, maxIterations, eps), ref cc);
+            CVUtils.CheckLastError();
             return new CVConnectedComp(ref cc);
 		}
 
@@ -860,10 +873,12 @@ namespace OpenCVDotNet
                 for (; (cont = cont->_cvSequenceFields.__cvTreeNodeFields.h_next.ToPointer()) != null;)
                 {
                     PInvoke.cvDrawContours(result.Array, new __CvSeqPtr(cont), new __CvScalar(255, 0, 0), new __CvScalar(0, 0, 0), 0, (int)CVGlobalConsts.CV_FILLED);
+                    CVUtils.CheckLastError();
                 }
             }
             
             PInvoke.cvReleaseMemStorage(ref storage);
+            CVUtils.CheckLastError();
             return result;
 		}
 
@@ -872,6 +887,7 @@ namespace OpenCVDotNet
 		{
 			CVImage n = new CVImage((__IplImagePtr)IntPtr.Zero);
 			n.image = PInvoke.cvCloneImage(this.Internal);
+            CVUtils.CheckLastError();
 			return n;
 		}
 
@@ -881,6 +897,7 @@ namespace OpenCVDotNet
 			System.Drawing.Rectangle prevRoi = this.RegionOfInterest;
 			this.ResetROI();
 			PInvoke.cvConvertImage(this.Internal, gs.Internal, (int)CVConvertImageFlags.Default);
+            CVUtils.CheckLastError();
 			this.RegionOfInterest = prevRoi;
 			gs.RegionOfInterest = prevRoi;
 
@@ -897,6 +914,7 @@ namespace OpenCVDotNet
 		private void Create(int width, int height, CVDepth depth, int channels)
 		{
 			image = PInvoke.cvCreateImage(new __CvSize(width, height), (int) depth,  channels);
+            CVUtils.CheckLastError();
 			created = true;
 		}
 
@@ -905,6 +923,7 @@ namespace OpenCVDotNet
         public void Dispose()
         {
             Release();
+            System.GC.SuppressFinalize(this);
         }
 
         #endregion

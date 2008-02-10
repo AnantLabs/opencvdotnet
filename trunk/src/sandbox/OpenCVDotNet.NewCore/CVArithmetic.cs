@@ -41,7 +41,7 @@ namespace OpenCVDotNet
                 new __CvArrPtr(image),
                 out min_val, out max_val,
                 out min_loc, out max_loc, new __CvArrPtr(mask));
-
+            CVUtils.CheckLastError();
             minVal = min_val;
             maxVal = max_val;
             minLocation = new System.Drawing.Point(min_loc.x, min_loc.y);

@@ -27,12 +27,14 @@ namespace OpenCVDotNet
 		{
 			asImage = null;
 			capture = PInvoke.cvCreateCameraCapture((int)CV_CAP.CV_CAP_ANY);
+            CVUtils.CheckLastError();
 		}
 
 		public CVCapture(int cameraId)
 		{
 			asImage = null;
 			capture = PInvoke.cvCreateCameraCapture(cameraId);
+            CVUtils.CheckLastError();
 		}
 
 		~CVCapture()
@@ -51,6 +53,7 @@ namespace OpenCVDotNet
 			if (capture.ptr != IntPtr.Zero)
 			{
                 PInvoke.cvReleaseCapture(ref capture);
+                CVUtils.CheckLastError();
 			}
 		}
 
@@ -59,7 +62,9 @@ namespace OpenCVDotNet
 			get
 			{
 				if (asImage != null) return asImage.Width;
-				return (int) PInvoke.cvGetCaptureProperty(capture,(int)CV_CAP_PROP.CV_CAP_PROP_FRAME_WIDTH);
+				int result = (int) PInvoke.cvGetCaptureProperty(capture,(int)CV_CAP_PROP.CV_CAP_PROP_FRAME_WIDTH);
+                CVUtils.CheckLastError();
+                return result;
 			}
 		}
 
@@ -68,7 +73,9 @@ namespace OpenCVDotNet
 			get
 			{
 				if (asImage != null) return asImage.Height;
-                return (int)PInvoke.cvGetCaptureProperty(capture, (int)CV_CAP_PROP.CV_CAP_PROP_FRAME_HEIGHT);
+                int result = (int)PInvoke.cvGetCaptureProperty(capture, (int)CV_CAP_PROP.CV_CAP_PROP_FRAME_HEIGHT);
+                CVUtils.CheckLastError();
+                return result;
 			}
 		}
 
@@ -77,6 +84,7 @@ namespace OpenCVDotNet
 			if (asImage != null) return asImage.Clone();
 
 			__IplImagePtr frame = PInvoke.cvQueryFrame(capture);
+            CVUtils.CheckLastError();
 			if (frame.ptr == IntPtr.Zero) return null;
 			CVImage newImage = new CVImage(new CVImage(frame));
 			return newImage;
@@ -99,7 +107,7 @@ namespace OpenCVDotNet
 			else
 			{
                 capture = PInvoke.cvCreateFileCapture(filename);
-				
+                CVUtils.CheckLastError();
 				if (capture.ptr == IntPtr.Zero)
 				{
 					throw new CVException(
@@ -117,7 +125,9 @@ namespace OpenCVDotNet
 				// if this is an image, return 30 as default FPS.
 				if (asImage != null) return 30;
 				
-				return (int) PInvoke.cvGetCaptureProperty(capture, (int)CV_CAP_PROP.CV_CAP_PROP_FPS);
+				int res = (int) PInvoke.cvGetCaptureProperty(capture, (int)CV_CAP_PROP.CV_CAP_PROP_FPS);
+                CVUtils.CheckLastError();
+                return res;
 			}
 		}
 
@@ -131,8 +141,6 @@ namespace OpenCVDotNet
 			CVImage img = new CVImage(this.Width, this.Height, CVDepth.Depth8U, 3);
 			return img;
 		}
-
-
 
         #region IDisposable Members
 

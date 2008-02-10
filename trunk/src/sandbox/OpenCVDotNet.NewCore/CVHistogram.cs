@@ -32,6 +32,7 @@ namespace OpenCVDotNet
             if (this.Internal != IntPtr.Zero)
             {
                 PInvoke.cvReleaseHist(ref _hist);
+                CVUtils.CheckLastError();
             }
 		}
 
@@ -42,12 +43,7 @@ namespace OpenCVDotNet
                 float min_value = 0, max_value = 0;
                 // TODO: Use the P/Invoke call
                 PInvoke.cvGetMinMaxHistValue(this.Internal, ref min_value, ref max_value);
-                //int min_idx = 0, max_idx = 0;
-                //for (int i = 0; i < 256; ++i)
-                //{
-                //    if (min_value > this[i]) min_value = (float)this[i];
-                //    if (max_value < this[i]) max_value = (float)this[i];
-                //}
+                CVUtils.CheckLastError();
                 return new CVPair((float)min_value, (float)max_value);
 			}
 		}
@@ -56,7 +52,9 @@ namespace OpenCVDotNet
 		{
 			get
 			{
-				return PInvoke.cvQueryHistValue_1D(_hist, idx0);
+				float res = PInvoke.cvQueryHistValue_1D(_hist, idx0);
+                CVUtils.CheckLastError();
+                return res;
 			}
 		}
 		
@@ -110,7 +108,8 @@ namespace OpenCVDotNet
                 ranges[i] = range;
             }
 
-            this.Internal = PInvoke.cvCreateHist(this._binSizes, (int)CVHistogramType.Array, ranges, true);    		
+            this.Internal = PInvoke.cvCreateHist(this._binSizes, (int)CVHistogramType.Array, ranges, true);
+            CVUtils.CheckLastError();
 		}
 
         #region IDisposable Members
